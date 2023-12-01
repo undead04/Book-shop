@@ -1,8 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookShop.Data
 {
-    public class MyDBContext:DbContext
+    public class MyDBContext:IdentityDbContext<IdentityUser>
     {
         public MyDBContext(DbContextOptions<MyDBContext> options):base(options) { }
         public DbSet<Book> books { get; set; }
