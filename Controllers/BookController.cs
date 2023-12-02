@@ -30,10 +30,10 @@ namespace BookShop.Controllers
                     var response = errors
                     .ToDictionary(x => $"{x.PropertyName}", x => x.ErrorMessage);
 
-                    return BadRequest(response);
+                    return Ok(BaseResponse<Dictionary<string,string>>.Error(response,400));
                    
                 }
-                return Ok(await _reponsitory.Create(bookModel));
+                return Ok( BaseResponse<string>.Success(await _reponsitory.Create(bookModel)));
             }
             catch
             {
@@ -45,7 +45,7 @@ namespace BookShop.Controllers
         {
             try
             {
-                return Ok(await _reponsitory.getAll());
+                return Ok(BaseResponse<List<BookVM>>.WithData(await _reponsitory.getAll()));
             }
             catch
             {
@@ -60,9 +60,9 @@ namespace BookShop.Controllers
                 var book=await _reponsitory.getById(id);
                 if (book == null)
                 {
-                    return NotFound();
+                    return Ok(BaseResponse<string>.Error("khong tim thay",404));
                 }
-                return Ok(book);
+                return Ok(BaseResponse<BookVM>.WithData(book));
             }
             catch
             {
@@ -78,9 +78,9 @@ namespace BookShop.Controllers
                 var book = await _reponsitory.Delete(id);
                 if(book == null)
                 {
-                    return NotFound();
+                    return Ok(BaseResponse<string>.Error("khong tim thay", 404));
                 }
-                return Ok(book);
+                return Ok(BaseResponse<string>.Success("Xóa thành công"));
             }
             catch
             {
@@ -100,15 +100,14 @@ namespace BookShop.Controllers
                     var response = errors
                     .ToDictionary(x => $"{x.PropertyName}", x => x.ErrorMessage);
 
-                    return BadRequest(response);
-
+                    return Ok(BaseResponse<Dictionary<string, string>>.Error(response, 400));
                 }
                 var book = await _reponsitory.Update(id, bookModel);
                 if (book == null)
                 {
-                    return NotFound();
+                    return Ok(BaseResponse<string>.Error("Khong tìm thấy cuốn sách này", 404));
                 }
-                return Ok(book);
+                return Ok(BaseResponse<string>.Success(book));
             }
             catch
             {

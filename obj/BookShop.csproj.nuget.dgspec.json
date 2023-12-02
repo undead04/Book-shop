@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\ASP.net\\BookShop\\BookShop.csproj": {}
+    "C:\\ASP.net\\BookShop\\BookShopSln\\BookShop.csproj": {}
   },
   "projects": {
-    "C:\\ASP.net\\BookShop\\BookShop.csproj": {
+    "C:\\ASP.net\\BookShop\\BookShopSln\\BookShop.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\ASP.net\\BookShop\\BookShop.csproj",
+        "projectUniqueName": "C:\\ASP.net\\BookShop\\BookShopSln\\BookShop.csproj",
         "projectName": "BookShop",
-        "projectPath": "C:\\ASP.net\\BookShop\\BookShop.csproj",
+        "projectPath": "C:\\ASP.net\\BookShop\\BookShopSln\\BookShop.csproj",
         "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-        "outputPath": "C:\\ASP.net\\BookShop\\obj\\",
+        "outputPath": "C:\\ASP.net\\BookShop\\BookShopSln\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -67,9 +67,17 @@
               "target": "Package",
               "version": "[7.0.13, )"
             },
+            "Stripe.net": {
+              "target": "Package",
+              "version": "[43.6.0-beta.1, )"
+            },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.5.0, )"
+            },
+            "Swashbuckle.AspNetCore.Filters": {
+              "target": "Package",
+              "version": "[7.0.12, )"
             }
           },
           "imports": [

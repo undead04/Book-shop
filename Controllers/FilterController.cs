@@ -1,4 +1,5 @@
-﻿using BookShop.Model.Reponsitory;
+﻿using BookShop.Model;
+using BookShop.Model.Reponsitory;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,7 +24,7 @@ namespace BookShop.Controllers
                 var book=_reponsitory.GetFilter(search,categoryId,from,to,sortby);
                 double totalPage=Math.Ceiling((double)book.Count/take);
                 book = book.Skip((page - 1) * take).Take(take).ToList();
-                return Ok(new {Book= book,TotalBook= totalPage });
+                return Ok(BaseResponse<FilterBookVM>.WithData(new FilterBookVM { Book = book, TotalPage = totalPage }));
             }
             catch
             {

@@ -28,6 +28,7 @@ namespace BookShop.Data
         public int SeriesID { get; set; }
         public ICollection<Images>? images { get; set; }
         public ICollection<BookCategorys>? bookCategories { get; set; }
+        public ICollection<OrderDetail>? orderDetail { get; set; }
         public Serie? serie { get; set; }
         
        
