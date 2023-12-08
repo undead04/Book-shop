@@ -62,6 +62,8 @@ builder.Services.AddScoped<IFilterReponsitory, FilterReponsitory>();
 builder.Services.AddScoped<IAccountReponsitory, AccountReponsitory>();
 builder.Services.AddScoped<IShoppingReponsitory, ShoppingReponsitory>();
 builder.Services.AddScoped<IUserReponsitory, UserReponsitory>();
+builder.Services.AddScoped<IOrderReponsitory, OrderRepository>();
+builder.Services.AddScoped<ICommentReponsitory, CommentReponsitory>();
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
     options.SuppressModelStateInvalidFilter = true;
@@ -85,7 +87,7 @@ builder.Services.AddAuthentication(option =>
             builder.Configuration["JWT:Secret"]))
     };
 });
-StripeConfiguration.ApiKey = builder.Configuration["APIKey:Key"];
+StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
 
 builder.Services.AddCors(options =>
 {

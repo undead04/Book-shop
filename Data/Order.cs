@@ -5,14 +5,18 @@ namespace BookShop.Data
 {
     public enum InvoiceStatus
     {
-        Waiting=0, Payment = 1, Complete = 2, Cancel = -1
+        WaitingConfirmation = 0, WaitingForDelivary = 1, Payment = 2, Complete = 3, Cancel = -1
+    }
+    public enum StatusPayment
+    {
+        unpaid=0,Pay=1,
     }
     public class Order
     {
         [Key]
         public int ID { get; set; }
         [Required]
-        public string UserID { get; set; }
+        public string UserID { get; set; } = string.Empty;
         [Required]
         public string UserName { get; set; } = string.Empty;
         [Required]
@@ -27,8 +31,8 @@ namespace BookShop.Data
         public DateTime OrderDate { get; set; }
         [Required]
         public DateTime DateOfReceiptOfGoods { get; set; }
-        public InvoiceStatus Status { get; set; }=InvoiceStatus.Waiting;
-
+        public InvoiceStatus status { get; set; } = InvoiceStatus.WaitingConfirmation;
+        public StatusPayment StatusPayment { get; set; } = StatusPayment.unpaid;
         public ApplicationUser? User { get; set; }
         public ICollection<OrderDetail>? Details { get; set; }
 

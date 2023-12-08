@@ -45,5 +45,47 @@ namespace BookShop.Controllers
                 return BadRequest();
             }
         }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteUser(string id)
+        {
+            try
+            {
+                var validation =await reponsitory.ValidationUser(id);
+                if (!string.IsNullOrEmpty(validation))
+                {
+                    return Ok(BaseResponse<string>.Error(validation, 400));
+
+                }
+               await reponsitory.DeleteUser(id);
+                return Ok(BaseResponse<string>.Success("Thanh cong"));
+
+                
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateUser(string id,UserModel user)
+        {
+            try
+            {
+                var validation = await reponsitory.ValidationUser(id);
+                if (!string.IsNullOrEmpty(validation))
+                {
+                    return Ok(BaseResponse<string>.Error(validation, 400));
+
+                }
+                await reponsitory.UpdateUser(id,user);
+                return Ok(BaseResponse<string>.Success("Thanh cong"));
+
+
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
     }
 }

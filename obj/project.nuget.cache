@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "3qm/VzeQMnQEodoiqx7WHLtO2nK40gfR8pm1IV4N5lW8XVtkfpjV3humWGLHEHKE7yFoLImcuHt2gMzBsaqFtA==",
+  "dgSpecHash": "jzT9QPBmzV7A6LHDHzzT3mGT6exxZFXMjUSufZH0IJho7SYbn7Am2P737bs7GD8A0DI0+PPfMbE7KSmZH2Ih7g==",
   "success": true,
   "projectFilePath": "C:\\ASP.net\\BookShop\\BookShopSln\\BookShop.csproj",
   "expectedPackageFiles": [
@@ -54,7 +54,7 @@
     "C:\\Users\\Admin\\.nuget\\packages\\mono.texttemplating\\2.2.1\\mono.texttemplating.2.2.1.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\scrutor\\3.3.0\\scrutor.3.3.0.nupkg.sha512",
-    "C:\\Users\\Admin\\.nuget\\packages\\stripe.net\\43.6.0-beta.1\\stripe.net.43.6.0-beta.1.nupkg.sha512",
+    "C:\\Users\\Admin\\.nuget\\packages\\stripe.net\\39.124.0\\stripe.net.39.124.0.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\swashbuckle.aspnetcore\\6.5.0\\swashbuckle.aspnetcore.6.5.0.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\swashbuckle.aspnetcore.filters\\7.0.12\\swashbuckle.aspnetcore.filters.7.0.12.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\swashbuckle.aspnetcore.filters.abstractions\\7.0.12\\swashbuckle.aspnetcore.filters.abstractions.7.0.12.nupkg.sha512",

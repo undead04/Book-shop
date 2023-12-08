@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookShop.Migrations
 {
     [DbContext(typeof(MyDBContext))]
-    [Migration("20231202104439_Init")]
-    partial class Init
+    [Migration("20231206150135_updateReplayAdmin")]
+    partial class updateReplayAdmin
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,6 +32,10 @@ namespace BookShop.Migrations
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Avatar")
                         .IsRequired()
@@ -182,6 +186,40 @@ namespace BookShop.Migrations
                     b.ToTable("Categorys");
                 });
 
+            modelBuilder.Entity("BookShop.Data.Comment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BookID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Create_at")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Star")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserComment")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookID");
+
+                    b.HasIndex("UserID");
+
+                    b.ToTable("Comments");
+                });
+
             modelBuilder.Entity("BookShop.Data.Images", b =>
                 {
                     b.Property<int>("ID")
@@ -229,7 +267,7 @@ namespace BookShop.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
-                    b.Property<int>("Status")
+                    b.Property<int>("StatusPayment")
                         .HasColumnType("int");
 
                     b.Property<string>("UserID")
@@ -239,6 +277,9 @@ namespace BookShop.Migrations
                     b.Property<string>("UserName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("status")
+                        .HasColumnType("int");
 
                     b.HasKey("ID");
 
@@ -266,6 +307,29 @@ namespace BookShop.Migrations
                     b.HasIndex("BookID");
 
                     b.ToTable("OrderDetails");
+                });
+
+            modelBuilder.Entity("BookShop.Data.ReplyAdmin", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AdminComment")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CommentID")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CommentID")
+                        .IsUnique();
+
+                    b.ToTable("replayAdmins");
                 });
 
             modelBuilder.Entity("BookShop.Data.Serie", b =>
@@ -446,6 +510,25 @@ namespace BookShop.Migrations
                     b.Navigation("Category");
                 });
 
+            modelBuilder.Entity("BookShop.Data.Comment", b =>
+                {
+                    b.HasOne("BookShop.Data.Book", "book")
+                        .WithMany("comments")
+                        .HasForeignKey("BookID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BookShop.Data.ApplicationUser", "User")
+                        .WithMany("comments")
+                        .HasForeignKey("UserID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+
+                    b.Navigation("book");
+                });
+
             modelBuilder.Entity("BookShop.Data.Images", b =>
                 {
                     b.HasOne("BookShop.Data.Book", "book")
@@ -485,6 +568,17 @@ namespace BookShop.Migrations
                     b.Navigation("Book");
 
                     b.Navigation("Order");
+                });
+
+            modelBuilder.Entity("BookShop.Data.ReplyAdmin", b =>
+                {
+                    b.HasOne("BookShop.Data.Comment", "comment")
+                        .WithOne("replyAdmin")
+                        .HasForeignKey("BookShop.Data.ReplyAdmin", "CommentID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("comment");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -541,11 +635,15 @@ namespace BookShop.Migrations
             modelBuilder.Entity("BookShop.Data.ApplicationUser", b =>
                 {
                     b.Navigation("Orders");
+
+                    b.Navigation("comments");
                 });
 
             modelBuilder.Entity("BookShop.Data.Book", b =>
                 {
                     b.Navigation("bookCategories");
+
+                    b.Navigation("comments");
 
                     b.Navigation("images");
 
@@ -555,6 +653,11 @@ namespace BookShop.Migrations
             modelBuilder.Entity("BookShop.Data.Category", b =>
                 {
                     b.Navigation("bookCategories");
+                });
+
+            modelBuilder.Entity("BookShop.Data.Comment", b =>
+                {
+                    b.Navigation("replyAdmin");
                 });
 
             modelBuilder.Entity("BookShop.Data.Order", b =>

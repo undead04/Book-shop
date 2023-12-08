@@ -1,27 +1,39 @@
 ﻿using Azure.Core;
 using BookShop.Data;
+using Microsoft.AspNetCore.Hosting.Server.Features;
+using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Stripe;
+
+using Stripe.Checkout;
 
 namespace BookShop.Model.Server
 {
     public class ShoppingReponsitory : IShoppingReponsitory
     {
         private readonly MyDBContext context;
-        private readonly IConfiguration configuration;
+       
 
         public ShoppingReponsitory(MyDBContext context, IConfiguration configuration)
         {
             this.context = context;
-            this.configuration = configuration;
+            
         }
-        public async Task<string>ValidationShopping(ShoppingModel bookModel)
+        public async Task<string> ValidationUser(string userID)
         {
-            var user = await context.Users.SingleOrDefaultAsync(user => user.Id == bookModel.UserID);
-            if(user== null)
+            var user = await context.Users.SingleOrDefaultAsync(user => user.Id == userID);
+            if (user == null)
             {
                 return "Khong co User nay";
             }
-            foreach (var item in bookModel.Books)
+            return string.Empty;
+        }
+        public async Task<string>ValidationShopping(List<ShoppingBook> shoppingModel)
+        {
+            
+           
+            foreach (var item in shoppingModel )
             {
                 var book = await context.books.FirstOrDefaultAsync(bo => bo.ID == item.ID);
                 if (book == null)
@@ -39,54 +51,140 @@ namespace BookShop.Model.Server
             return string.Empty;
         }
 
-        public Task<string> BuyOnline(ShoppingModel bookModel)
+
+        public async Task<string> CheckOut(List<ShoppingBook> Books, string thisApiUrl,string s_wasmClientURL)
         {
-            throw new NotImplementedException();
-        }
-        public async Task<string> Buy(ShoppingModel bookModel)
-        {
-            double TotalPrice = 0;
-            var user = await context.Users.SingleOrDefaultAsync(user => user.Id == bookModel.UserID);
-            
-                var order = new Order
+            var options = new SessionCreateOptions
+            {
+                // Stripe calls the URLs below when certain checkout events happen such as success and failure.
+                SuccessUrl = $"{thisApiUrl}/checkout/success?sessionId=" + "{CHECKOUT_SESSION_ID}", // Customer paid.
+                CancelUrl = s_wasmClientURL + "failed",  // Checkout cancelled.
+                PaymentMethodTypes = new List<string> // Only card available in test mode?
+            {
+                "card"
+            },
+                LineItems = new List<SessionLineItemOptions>(),
+
+
+                Mode = "payment",
+                // One-time payment. Stripe supports recurring 'subscription' payments.
+            };
+            foreach (var book in Books)
+            {
+                var BookModel = await context.books.FirstOrDefaultAsync(x => x.ID == book.ID);
+                var order = new SessionLineItemOptions
                 {
-                    UserName = bookModel.UserName,
-                    UserID = bookModel.UserID,
-                    Address = bookModel.Address,
-                    Phone = bookModel.Phone,
-                    OrderDate = DateTime.Now.Date,
-                };
-                await context.orders.AddAsync(order);
-                await context.SaveChangesAsync();
-                foreach(var item in bookModel.Books)
-                {
-                    var book = await context.books.FirstOrDefaultAsync(bo => bo.ID == item.ID);
-                    var OrderDetail = new OrderDetail
+                    
+                    PriceData = new SessionLineItemPriceDataOptions()
                     {
-                        OrderID = order.ID,
-                        BookID = item.ID,
-                        Quantity = item.Quantity,
-                        Price = book.NewPrice,
-                    };
-                    book.Quantity -= item.Quantity;
-                    TotalPrice += (OrderDetail.Price * OrderDetail.Quantity);
-                    await context.ordersDetails.AddAsync(OrderDetail);
-                }
-                order.Price = TotalPrice;
-                order.Status = InvoiceStatus.Waiting;
-                await context.SaveChangesAsync();
-                return "Đã mua thành công";
+                        UnitAmount = (long)BookModel.NewPrice,
+                        Currency = "VND",
+                        ProductData = new SessionLineItemPriceDataProductDataOptions()
+                        {
+                            Name = BookModel.Name,
+                            Metadata = new Dictionary<string, string> { { "BookId", BookModel.ID.ToString() } }
+                        }
 
 
-            
-           
+                    },
+                    
+                    Quantity = book.Quantity,
+                    
 
 
 
+                };
+                options.LineItems.Add(order);
+            }
+
+            var service = new SessionService();
+            var session = await service.CreateAsync(options);
+
+            return session.Id;
         }
-           
 
-        
+        public async Task<string> CheckoutSuccess(ShoppingModel shoppingModel,Session session)
+        {
+            
+
+            // Here you can save order and customer details to your database.
+            var total = session.AmountTotal.Value;
+            
+            var order = new Data.Order
+            {
+                UserName = shoppingModel.UserName,
+                UserID = shoppingModel.UserID,
+                Address = shoppingModel.Address,
+                Phone = shoppingModel.Phone,
+                OrderDate = DateTime.Now.Date,
+                status = InvoiceStatus.WaitingConfirmation,
+                Price = total,
+                StatusPayment=StatusPayment.Pay
+                
+                
+            };
+            await context.orders.AddAsync(order);
+            await context.SaveChangesAsync();
+            foreach (var item in session.LineItems.Data )
+            {
+                var bookId = item.Price.Product.Metadata["BookId"];
+                var book = await context.books.FirstOrDefaultAsync(bo => bo.ID == Convert.ToInt32(bookId));
+                var OrderDetail = new OrderDetail
+                {
+                    OrderID = order.ID,
+                    BookID = book.ID,
+                    Quantity =Convert.ToInt32(item.Quantity),
+                    Price = book.NewPrice,
+
+                };
+                book.Quantity -= Convert.ToInt32(item.Quantity);
+                
+                await context.ordersDetails.AddAsync(OrderDetail);
+            }
+           
+            //order.Status = InvoiceStatus.WaitingConfirmation;
+            await context.SaveChangesAsync();
+            return "Đã mua thành công";
+           
+        }
+        public  async Task<string> Buy(ShoppingOflineModel shopping)
+        {
+            double totalPrice = 0;
+            var order = new Data.Order
+            {
+                UserName = shopping.UserName,
+                UserID = shopping.UserID,
+                Address = shopping.Address,
+                Phone = shopping.Phone,
+                OrderDate = DateTime.Now.Date,
+                status = InvoiceStatus.WaitingConfirmation,
+                StatusPayment=StatusPayment.unpaid
+               
+
+
+            };
+            await context.orders.AddAsync(order);
+            await context.SaveChangesAsync();
+            foreach (var item in shopping.Books)
+            {
+                var book = await context.books.FirstOrDefaultAsync(x => x.ID == item.ID);
+                var OrderDetail = new OrderDetail
+                {
+                    OrderID = order.ID,
+                    BookID = item.ID,
+                    Quantity = item.Quantity,
+                    Price = book.NewPrice,
+
+                };
+                book.Quantity -= Convert.ToInt32(item.Quantity);
+                totalPrice += book.NewPrice;
+                await context.ordersDetails.AddAsync(OrderDetail);
+            }
+            order.Price=totalPrice;
+            //order.Status = InvoiceStatus.WaitingConfirmation;
+            await context.SaveChangesAsync();
+            return "Đã mua thành công";
+        }
     }
 
     

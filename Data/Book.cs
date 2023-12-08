@@ -30,6 +30,7 @@ namespace BookShop.Data
         public ICollection<BookCategorys>? bookCategories { get; set; }
         public ICollection<OrderDetail>? orderDetail { get; set; }
         public Serie? serie { get; set; }
+        public ICollection<Comment>? comments { get; set; }
         
        
 

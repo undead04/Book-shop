@@ -14,6 +14,8 @@ namespace BookShop.Data
         public DbSet<Serie> series { get; set; }
         public DbSet<Order> orders { get; set; }
         public DbSet<OrderDetail> ordersDetails { get; set; }
+        public DbSet<Comment> comments { get; set; }
+        public DbSet<ReplyAdmin> replyAdmins { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -63,6 +65,22 @@ namespace BookShop.Data
                 .WithMany(e=>e.orderDetail)
                 .HasForeignKey(e=>e.BookID)
                 .OnDelete(DeleteBehavior.Cascade);
+            });
+            modelBuilder.Entity<Comment>(e =>
+            {
+                e.HasOne(e => e.book)
+                .WithMany(e => e.comments)
+                .HasForeignKey(e => e.BookID)
+                .OnDelete(DeleteBehavior.Cascade);
+                e.HasOne(e=>e.User)
+                .WithMany(e=>e.comments)
+                .HasForeignKey(e=>e.UserID) .OnDelete(DeleteBehavior.Cascade);
+            });
+            modelBuilder.Entity<ReplyAdmin>(e =>
+            {
+                e.HasOne(e=>e.comment)
+                .WithOne(e=>e.replyAdmin)
+                .HasForeignKey<ReplyAdmin>(e => e.CommentID).OnDelete(DeleteBehavior.Cascade);
             });
         }
     }

@@ -14,7 +14,7 @@
           "Microsoft.AspNetCore.OpenApi": "7.0.7",
           "Microsoft.EntityFrameworkCore.Design": "7.0.13",
           "Microsoft.EntityFrameworkCore.SqlServer": "7.0.13",
-          "Stripe.net": "43.6.0-beta.1",
+          "Stripe.net": "39.124.0",
           "Swashbuckle.AspNetCore": "6.5.0",
           "Swashbuckle.AspNetCore.Filters": "7.0.12"
         },
@@ -524,15 +524,15 @@
           }
         }
       },
-      "Stripe.net/43.6.0-beta.1": {
+      "Stripe.net/39.124.0": {
         "dependencies": {
           "Newtonsoft.Json": "12.0.3",
           "System.Configuration.ConfigurationManager": "6.0.1"
         },
         "runtime": {
           "lib/net6.0/Stripe.net.dll": {
-            "assemblyVersion": "43.6.0.0",
-            "fileVersion": "43.6.0.0"
+            "assemblyVersion": "39.124.0.0",
+            "fileVersion": "39.124.0.0"
           }
         }
       },
@@ -1131,12 +1131,12 @@
       "path": "scrutor/3.3.0",
       "hashPath": "scrutor.3.3.0.nupkg.sha512"
     },
-    "Stripe.net/43.6.0-beta.1": {
+    "Stripe.net/39.124.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-mIVE1af89nAz7twQYOaV6bzgMPu1Vo89mSEmz5QBmJnTsFOlhwESaLKTLTQ4CO+1EMewmGZLYc1nnAjAHQE12Q==",
-      "path": "stripe.net/43.6.0-beta.1",
-      "hashPath": "stripe.net.43.6.0-beta.1.nupkg.sha512"
+      "sha512": "sha512-JjXjXpv30OxKi1KzMrmDmjHPhUZnI2X2ZOaMTorN4kGbVLktporPe/GJztgFW08p7nUMDk/s1iuSX26/pmOpNQ==",
+      "path": "stripe.net/39.124.0",
+      "hashPath": "stripe.net.39.124.0.nupkg.sha512"
     },
     "Swashbuckle.AspNetCore/6.5.0": {
       "type": "package",
