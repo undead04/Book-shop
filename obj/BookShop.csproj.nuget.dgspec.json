@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\ASP.net\\BookShop\\BookShopSln\\BookShop.csproj": {}
+    "D:\\space\\project\\ltbe\\Book-shop\\BookShop.csproj": {}
   },
   "projects": {
-    "C:\\ASP.net\\BookShop\\BookShopSln\\BookShop.csproj": {
+    "D:\\space\\project\\ltbe\\Book-shop\\BookShop.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\ASP.net\\BookShop\\BookShopSln\\BookShop.csproj",
+        "projectUniqueName": "D:\\space\\project\\ltbe\\Book-shop\\BookShop.csproj",
         "projectName": "BookShop",
-        "projectPath": "C:\\ASP.net\\BookShop\\BookShopSln\\BookShop.csproj",
-        "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-        "outputPath": "C:\\ASP.net\\BookShop\\BookShopSln\\obj\\",
+        "projectPath": "D:\\space\\project\\ltbe\\Book-shop\\BookShop.csproj",
+        "packagesPath": "C:\\Users\\thanh\\.nuget\\packages\\",
+        "outputPath": "D:\\space\\project\\ltbe\\Book-shop\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\thanh\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -22,7 +22,6 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\sdk\\7.0.304\\Sdks\\Microsoft.NET.Sdk.Web\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -99,7 +98,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.304\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.202\\RuntimeIdentifierGraph.json"
         }
       }
     }
