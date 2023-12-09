@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { textVariant } from "../../../../laravel_react/laravel-react-full-stack/react/src/utils/motion";
 import { Link } from "react-router-dom";
 const fakeApi = [{}];
 const api = "/api/order/userId/status";
