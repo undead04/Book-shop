@@ -31,6 +31,8 @@ namespace BookShop.Model.Server
             if(orderUser.status==InvoiceStatus.WaitingForDelivary)
             {
                 orderUser.status = InvoiceStatus.Complete;
+                orderUser.StatusPayment = StatusPayment.Pay;
+                orderUser.DateOfReceiptOfGoods = DateTime.Now.Date;
                 await context.SaveChangesAsync();
                 return "Giao hàng thành công";
             }

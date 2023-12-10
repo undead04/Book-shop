@@ -29,6 +29,7 @@ namespace BookShop.Model
         public string Image { get; set; } = string.Empty;
         public List<string>? SecondaryImage { get; set; }
         public string Series { get; set; } = string.Empty;
+        public double TotalStar { get; set; } =0;
         public List<string>? NameCategory { get; set; }
     }
 }

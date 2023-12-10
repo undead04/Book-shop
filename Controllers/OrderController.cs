@@ -35,7 +35,7 @@ namespace BookShop.Controllers
                 return BadRequest();
             }
         }
-        [HttpPut("Confirmation")]
+        [HttpPut("Confirmation/{OrderID}")]
         public async Task<IActionResult> confirmationOrder(int OrderID)
         {
             try
@@ -56,7 +56,7 @@ namespace BookShop.Controllers
                 return BadRequest();
             }
         }
-        [HttpPut("GiveOrder")]
+        [HttpPut("GiveOrder/{OrderID}")]
         public async Task<IActionResult> GiveOrder(int OrderID)
         {
             try

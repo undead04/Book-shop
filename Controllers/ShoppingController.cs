@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Hosting.Server;
 
 using Microsoft.AspNetCore.Mvc;
 using Stripe.Checkout;
+using Microsoft.Extensions.Options;
 
 namespace BookShop.Controllers
 {
@@ -13,24 +14,29 @@ namespace BookShop.Controllers
     [ApiController]
     public class ShoppingController : ControllerBase
     {
-        private readonly IShoppingReponsitory  reponsitory;
+        private readonly IShoppingReponsitory reponsitory;
         private static string s_wasmClientURL = string.Empty;
         private readonly IConfiguration configuration;
 
-        public ShoppingController(IShoppingReponsitory reponsitory, IConfiguration configuration) 
+        public ShoppingController(IShoppingReponsitory reponsitory, IConfiguration configuration)
         {
-            this.reponsitory=reponsitory;
+            this.reponsitory = reponsitory;
             this.configuration = configuration;
         }
         [HttpPost("Buy")]
-        public async Task<IActionResult>Buy(List<ShoppingBook> book, IServiceProvider sp)
+        public async Task<IActionResult> Buy(ShoppingModel shopping, IServiceProvider sp)
         {
             try
             {
-                var validationBook = await reponsitory.ValidationShopping(book);
-                if(!string.IsNullOrEmpty(validationBook))
+                var validationBook = await reponsitory.ValidationShopping(shopping.Books);
+                if (!string.IsNullOrEmpty(validationBook))
                 {
-                    return Ok(BaseResponse<string>.Error(validationBook,400));
+                    return Ok(BaseResponse<string>.Error(validationBook, 400));
+                }
+                var validationUser = await reponsitory.ValidationUser(shopping.UserID);
+                if (!string.IsNullOrEmpty(validationUser))
+                {
+                    return Ok(BaseResponse<string>.Error(validationUser, 400));
                 }
                 var referer = Request.Headers.Referer;
                 s_wasmClientURL = referer[0];
@@ -47,9 +53,16 @@ namespace BookShop.Controllers
 
                 if (thisApiUrl is not null)
                 {
-                    var sessionId = await reponsitory.CheckOut(book, thisApiUrl, s_wasmClientURL);
+                    var sessionId = await reponsitory.CheckOut(shopping.Books, thisApiUrl, s_wasmClientURL);
                     var pubKey = configuration["Stripe:PubKey"];
+                    var sessionService = new SessionService();
+                    var options = new SessionGetOptions
+                    {
+                        Expand = new List<string> { "line_items.data.price.product" }
 
+                    };
+                    Session session = sessionService.Get(sessionId, options);
+                    await reponsitory.CheckoutSuccess(shopping, session);
                     var checkoutOrderResponse = new CheckoutOrderResponse()
                     {
                         SessionId = sessionId,
@@ -60,7 +73,7 @@ namespace BookShop.Controllers
                 }
                 else
                 {
-                    return  StatusCode(500);
+                    return StatusCode(500);
                 }
             }
             catch
@@ -68,25 +81,14 @@ namespace BookShop.Controllers
                 return BadRequest();
             }
         }
-        [HttpPost("success")]
-        public async Task<IActionResult> CheckoutSuccess(ShoppingModel bookModel, string sessionId)
+        [HttpGet("success")]
+        public async Task<IActionResult> CheckoutSuccess(string sessionId)
         {
             try
             {
-                var user =await reponsitory.ValidationUser(bookModel.UserID);
-                if(!string.IsNullOrEmpty(user))
-                {
-                    return Ok(BaseResponse<string>.Error(user, 400));
-                }
-                var sessionService = new SessionService();
-                var options = new SessionGetOptions
-                {
-                    Expand = new List<string> { "line_items.data.price.product" }
 
-                };
-                Session session = sessionService.Get(sessionId,options);
-                var order = await reponsitory.CheckoutSuccess(bookModel, session);
-                return Ok(BaseResponse<string>.Success(order));
+
+                return Redirect(s_wasmClientURL + "success");
             }
             catch
             {
@@ -94,11 +96,11 @@ namespace BookShop.Controllers
             }
         }
         [HttpPost("BuyOffline")]
-        public async Task<IActionResult> Buy(ShoppingOflineModel shopping)
+        public async Task<IActionResult> Buy(ShoppingModel shopping)
         {
             try
             {
-                var validationUser =await reponsitory.ValidationUser(shopping.UserID);
+                var validationUser = await reponsitory.ValidationUser(shopping.UserID);
                 if (!string.IsNullOrEmpty(validationUser))
                 {
                     return Ok(BaseResponse<string>.Error(validationUser, 400));

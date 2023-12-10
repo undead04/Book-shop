@@ -57,7 +57,7 @@ namespace BookShop.Model.Server
             var options = new SessionCreateOptions
             {
                 // Stripe calls the URLs below when certain checkout events happen such as success and failure.
-                SuccessUrl = $"{thisApiUrl}/checkout/success?sessionId=" + "{CHECKOUT_SESSION_ID}", // Customer paid.
+                SuccessUrl = $"{thisApiUrl}/api/Shopping/success?sessionId=" + "{CHECKOUT_SESSION_ID}", // Customer paid.
                 CancelUrl = s_wasmClientURL + "failed",  // Checkout cancelled.
                 PaymentMethodTypes = new List<string> // Only card available in test mode?
             {
@@ -103,7 +103,7 @@ namespace BookShop.Model.Server
             return session.Id;
         }
 
-        public async Task<string> CheckoutSuccess(ShoppingModel shoppingModel,Session session)
+        public async Task CheckoutSuccess(ShoppingModel shoppingModel,Session session)
         {
             
 
@@ -144,10 +144,10 @@ namespace BookShop.Model.Server
            
             //order.Status = InvoiceStatus.WaitingConfirmation;
             await context.SaveChangesAsync();
-            return "Đã mua thành công";
-           
+            
+
         }
-        public  async Task<string> Buy(ShoppingOflineModel shopping)
+        public  async Task<string> Buy(ShoppingModel shopping)
         {
             double totalPrice = 0;
             var order = new Data.Order
@@ -183,8 +183,11 @@ namespace BookShop.Model.Server
             order.Price=totalPrice;
             //order.Status = InvoiceStatus.WaitingConfirmation;
             await context.SaveChangesAsync();
-            return "Đã mua thành công";
+            return "Thanh cong";
+           
         }
+
+        
     }
 
     

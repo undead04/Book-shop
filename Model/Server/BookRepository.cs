@@ -118,6 +118,7 @@ namespace BookShop.Model.Reponsitory
 
         public async Task<List<BookVM>> getAll()
         {
+            
             var book = await _context.books.Select(x => new BookVM
             {
                 ID = x.ID,
@@ -131,7 +132,8 @@ namespace BookShop.Model.Reponsitory
                 OldPrice = x.OldPrice,
                 SecondaryImage=x.images!.Select(x=>x.Image).ToList(),
                 NameCategory = x.bookCategories!.Select(x => x.Category!.Name).ToList(),
-                Quantity=x.Quantity
+                Quantity=x.Quantity,
+                TotalStar = x.comments.Any()? Math.Round((double)x.comments.Select(x => x.Star).Sum() / x.comments.Select(x => x.Star).Count(),2):0
 
             }).ToListAsync();
             return book;
@@ -139,7 +141,7 @@ namespace BookShop.Model.Reponsitory
 
         public async Task<BookVM> getById(int id)
         {
-            var book = await _context.books.Include(x=>x.bookCategories)!.ThenInclude(x=>x.Category).Include(x=>x.images).FirstOrDefaultAsync(x=>x.ID==id);
+            var book = await _context.books.Include(x=>x.bookCategories)!.ThenInclude(x=>x.Category).Include(x=>x.comments).Include(f=>f.images).FirstOrDefaultAsync(x=>x.ID==id);
 
             if (book != null)
             {
@@ -156,7 +158,8 @@ namespace BookShop.Model.Reponsitory
                     OldPrice = book.OldPrice,
                     SecondaryImage = book.images!.Select(x => x.Image).ToList(),
                     NameCategory = book.bookCategories!.Select(x => x.Category!.Name).ToList(),
-                    Quantity = book.Quantity
+                    Quantity = book.Quantity,
+                    TotalStar = book.comments.Any() ? Math.Round((double)book.comments.Select(x => x.Star).Sum() / book.comments.Select(x => x.Star).Count(), 2) : 0
                 };
             }
             return null;

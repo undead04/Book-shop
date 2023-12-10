@@ -3,17 +3,7 @@
 namespace BookShop.Model
 {
     
-    public class ShoppingModel
-    {
-
-        public string UserID { get; set; } = string.Empty;
-        
-        public string UserName { get; set; } = string.Empty;
-       
-        public string Phone { get; set; } = string.Empty;
-     
-        public string Address { get; set; } = string.Empty;
-    }
+   
     public class ShoppingBook
     {
         public int ID { get; set; }
@@ -21,7 +11,7 @@ namespace BookShop.Model
         public int Quantity { get; set; }
         
     }
-    public class ShoppingOflineModel
+    public class ShoppingModel
     {
         public string UserID { get; set; } = string.Empty;
 

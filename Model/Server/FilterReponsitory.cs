@@ -1,4 +1,6 @@
 ﻿using BookShop.Data;
+using Microsoft.EntityFrameworkCore;
+using static System.Reflection.Metadata.BlobBuilder;
 
 namespace BookShop.Model.Reponsitory
 {
@@ -53,6 +55,25 @@ namespace BookShop.Model.Reponsitory
                     case "sale-price":
                         book = book.Where(bo => bo.NewPrice != bo.OldPrice);
                         break;
+                    case "best-seller":
+                        var groupBookBestSeller = _context.ordersDetails
+                        .GroupBy(od => od.BookID)
+                        .OrderByDescending(g => g.Sum(od => od.Quantity))
+                        .Select(g => g.Key)
+                        .ToList();
+
+                        // Lọc sách dựa trên danh sách ID của sách bán chạy nhất
+
+                        var bookid = groupBookBestSeller.Where(x => book.FirstOrDefault(bo => bo.ID == x) != null).ToList();
+                        List<Book> BestSeller = new List<Book>();
+                        foreach(var booksid in bookid)
+                        {
+                            BestSeller.Add(book.Include(f=>f.images).Include(f=>f.comments).Include(f=>f.bookCategories).ThenInclude(f=>f.Category).FirstOrDefault(x => x.ID == booksid));
+                        }
+                        book = BestSeller.AsQueryable();
+                        break;
+                       
+
                 }
             }
             
@@ -69,6 +90,7 @@ namespace BookShop.Model.Reponsitory
                 Image = x.Image,
                 NameCategory=x.bookCategories!.Select(x=>x.Category.Name).ToList(),
                 SecondaryImage = x.images!.Select(x => x.Image).ToList(),
+                TotalStar = x.comments.Any() ? Math.Round((double)x.comments.Select(x => x.Star).Sum() / x.comments.Select(x => x.Star).Count(), 2) : 0
 
             }).ToList();
         }

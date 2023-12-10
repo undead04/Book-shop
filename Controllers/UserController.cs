@@ -67,7 +67,7 @@ namespace BookShop.Controllers
             }
         }
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser(string id,UserModel user)
+        public async Task<IActionResult> UpdateUser(string id,[FromForm]UserModel user)
         {
             try
             {
