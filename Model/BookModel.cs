@@ -14,6 +14,7 @@ namespace BookShop.Model
         public string Author { get; set; } = string.Empty;
         public IFormFile? Image { get; set; }
         public List<IFormFile>? SecondaryImage { get; set; }
+        public string Description { get; set; } = string.Empty;
         public int SeriesID { get; set; }
     }
     public class BookVM
@@ -31,5 +32,6 @@ namespace BookShop.Model
         public string Series { get; set; } = string.Empty;
         public double TotalStar { get; set; } =0;
         public List<string>? NameCategory { get; set; }
+        public string Description { get; set; } = string.Empty;
     }
 }

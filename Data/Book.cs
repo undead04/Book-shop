@@ -24,7 +24,8 @@ namespace BookShop.Data
         public string Author { get; set; } = string.Empty;
         [Required]
         public string Image { get; set; } = string.Empty;
-        
+        [Required]
+        public string Description { get; set; } = string.Empty;
         public int SeriesID { get; set; }
         public ICollection<Images>? images { get; set; }
         public ICollection<BookCategorys>? bookCategories { get; set; }

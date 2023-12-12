@@ -23,6 +23,7 @@ namespace BookShop.Model.Reponsitory
                 Author=bookModel.Author,
                 SeriesID=bookModel.SeriesID,
                 Quantity=bookModel.Quantity,
+                Description=bookModel.Description
             };
             await _context.books.AddAsync(book);
             await _context.SaveChangesAsync();
@@ -123,7 +124,7 @@ namespace BookShop.Model.Reponsitory
             {
                 ID = x.ID,
                 Supplier = x.Supplier,
-               
+               Description=x.Description,
                 Image = x.Image,
                 Name = x.Name,
                 Author = x.Author,
@@ -133,6 +134,7 @@ namespace BookShop.Model.Reponsitory
                 SecondaryImage=x.images!.Select(x=>x.Image).ToList(),
                 NameCategory = x.bookCategories!.Select(x => x.Category!.Name).ToList(),
                 Quantity=x.Quantity,
+                
                 TotalStar = x.comments.Any()? Math.Round((double)x.comments.Select(x => x.Star).Sum() / x.comments.Select(x => x.Star).Count(),2):0
 
             }).ToListAsync();
@@ -159,6 +161,7 @@ namespace BookShop.Model.Reponsitory
                     SecondaryImage = book.images!.Select(x => x.Image).ToList(),
                     NameCategory = book.bookCategories!.Select(x => x.Category!.Name).ToList(),
                     Quantity = book.Quantity,
+                    Description=book.Description,
                     TotalStar = book.comments.Any() ? Math.Round((double)book.comments.Select(x => x.Star).Sum() / book.comments.Select(x => x.Star).Count(), 2) : 0
                 };
             }
@@ -182,6 +185,7 @@ namespace BookShop.Model.Reponsitory
             book.Author = bookModel.Author;
             book.Publisher = bookModel.Publisher;
             book.SeriesID = bookModel.SeriesID;
+            book.Description = bookModel.Description;
             string[] imageExtensions = { ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".tiff", ".tif", ".svg", ".webp", ".ico" };
 
             if (bookModel.Image != null)

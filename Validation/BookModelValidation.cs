@@ -26,6 +26,7 @@ namespace BookShop.Validation
                  .InclusiveBetween(0, int.MaxValue)
                 .Must(IsNumber).WithMessage("Phải là số");
             RuleFor(x => x.CategoryID).NotNull().WithMessage("khong dc trong");
+            RuleFor(x => x.Description).NotEmpty().WithMessage("Khong dc trong");
 
 
         }
