@@ -1,4 +1,5 @@
 ﻿using BookShop.Data;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookShop.Model.Server
@@ -6,10 +7,12 @@ namespace BookShop.Model.Server
     public class UserReponsitory : IUserReponsitory
     {
         private readonly MyDBContext context;
+        private UserManager<ApplicationUser> userManager;
 
-        public UserReponsitory(MyDBContext context)
+        public UserReponsitory(MyDBContext context,UserManager<ApplicationUser> userManager)
         {
             this.context = context;
+            this.userManager = userManager;
         }
         public async Task<UserVM> GetUser(string UserID)
         {
@@ -61,14 +64,13 @@ namespace BookShop.Model.Server
 
         public async Task UpdateUser(string UserID, UserModel userModel)
         {
-           var user = await context.Users.FirstOrDefaultAsync(x => x.Id == UserID);
-            
-            user.UserName = userModel.UserName;
-            user.Email = userModel.Email;
+            var user = await userManager.FindByIdAsync(UserID);
+
+            user.Address = userModel.Address;
             user.PhoneNumber = userModel.Phone;
             string[] imageExtensions = { ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".tiff", ".tif", ".svg", ".webp", ".ico" };
             
-            if (userModel.Avatar.Length>0)
+            if (userModel.Avatar!=null)
             {
                 var extension = Path.GetExtension(userModel.Avatar.FileName);
                 var nameImage = Path.GetFileNameWithoutExtension(userModel.Avatar.FileName);
@@ -91,8 +93,10 @@ namespace BookShop.Model.Server
                     }
                     user.Avatar = newNameImage;
                 }
-                await context.SaveChangesAsync();
+               
+               
             }
+            await userManager.UpdateAsync(user);
         }
         public async Task<string> ValidationUser(string userID)
         {

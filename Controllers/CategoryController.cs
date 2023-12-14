@@ -27,7 +27,12 @@ namespace BookShop.Controllers
         {
             try
             {
-                var resultValidion = _validation.Validate(categoryModel);
+                var createCategory = new CategoryVM
+                {
+                    ID=0,
+                    Name=categoryModel.Name
+                };
+                var resultValidion = _validation.Validate(createCategory);
                 if (!resultValidion.IsValid)
                 {
                     var errors = resultValidion.Errors.Select(e => new { e.PropertyName, e.ErrorMessage }).ToList();
@@ -80,8 +85,13 @@ namespace BookShop.Controllers
             try
             {
 
-
-                var resultValidation = _validation.Validate(categoryModel);
+                var updateCategory = new CategoryVM
+                {
+                    ID = id,
+                    Name = categoryModel.Name
+                };
+                
+                var resultValidation = _validation.Validate(updateCategory);
                 if (!resultValidation.IsValid)
                 {
                     var errors = resultValidation.Errors.Select(e => new { e.PropertyName, e.ErrorMessage }).ToList();

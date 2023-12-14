@@ -3,8 +3,7 @@
 using BookShop.Model;
 using BookShop.Model.Reponsitory;
 using BookShop.Model.Server;
-using BookShop.Validation;
-using FluentValidation;
+using AutoMapper;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -99,6 +98,7 @@ builder.Services.AddCors(options =>
                     .AllowAnyHeader();
     });
 });
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

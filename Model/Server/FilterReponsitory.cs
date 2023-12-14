@@ -1,5 +1,6 @@
 ﻿using BookShop.Data;
 using Microsoft.EntityFrameworkCore;
+using System.Text;
 using static System.Reflection.Metadata.BlobBuilder;
 
 namespace BookShop.Model.Reponsitory
@@ -93,6 +94,48 @@ namespace BookShop.Model.Reponsitory
                 TotalStar = x.comments.Any() ? Math.Round((double)x.comments.Select(x => x.Star).Sum() / x.comments.Select(x => x.Star).Count(), 2) : 0
 
             }).ToList();
+        }
+        public async Task<List<CommentVM>> GetFilterComment(int BookID, int Star)
+        {
+            var comment = await _context.comments.Include(f => f.User)
+                .Include(f=>f.replyAdmin)
+                .Where(co => co.BookID == BookID && co.Star == Star).ToListAsync();
+            return comment.Select(co => new CommentVM
+            {
+                UserName=co.User.UserName,
+                Comment=co.UserComment,
+                ID=co.Id,
+                Star=co.Star,
+                replay=co.replyAdmin?.AdminComment,
+
+            }).ToList();
+            
+        }
+        public async Task<List<FilterBenefit>> GetFilterBenefit(int Year)
+        {
+            Dictionary<int, string> MonthYear = new Dictionary<int, string>
+            {
+                {1, "January"}, {2, "February"}, {3, "March"}, {4, "April"},
+                {5, "May"}, {6, "June"}, {7, "July"}, {8, "August"},
+                {9, "September"}, {10, "October"}, {11, "November"}, {12, "December"}
+            };
+
+            Dictionary<string, double> TotalPriceMonth = new Dictionary<string, double>();
+
+
+            var order = await _context.orders.Where(x => x.DateOfReceiptOfGoods.Year == Year).ToListAsync();
+            for (int i = 1; i <= 12; i++)
+            {
+                var orderMonth = order.Where(x => x.DateOfReceiptOfGoods.Month == i).ToList();
+                double totalPrice = orderMonth.Select(x => x.Price).Sum();
+                TotalPriceMonth.Add(MonthYear[i], totalPrice);
+            }
+            return TotalPriceMonth.Select(x => new FilterBenefit
+            {
+                Month = x.Key,
+                Price = x.Value
+            }).ToList();
+
         }
     }
 

@@ -7,5 +7,6 @@ namespace BookShop.Model.Reponsitory
         public Task<IdentityResult> SignUpAysc(SignUpModel model);
         public Task<string> CreateToken(SignInModel model);
         public Task<UserSignInVM> SignInAsync(SignInModel model);
+        
     }
 }

@@ -1,7 +1,10 @@
 ﻿using BookShop.Model;
 using BookShop.Model.Reponsitory;
+using BookShop.Model.Server;
+using BookShop.Validation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Model;
 
 namespace BookShop.Controllers
 {
@@ -10,22 +13,35 @@ namespace BookShop.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IAccountReponsitory reponsitory;
+        private readonly SignUpModelValidation validations;
 
-        public AccountController(IAccountReponsitory reponsitory) 
+        public AccountController(IAccountReponsitory reponsitory, SignUpModelValidation validations) 
         {
             this.reponsitory = reponsitory;
+            this.validations = validations;
         }
         [HttpPost("SignUp")]
         public async Task<IActionResult> SignUp(SignUpModel model)
         {
             try
             {
+                var resultValidion = validations.Validate(model);
+                if (!resultValidion.IsValid)
+                {
+                    var errors = resultValidion.Errors.Select(e => new { e.PropertyName, e.ErrorMessage }).ToList();
+                    var response = errors
+                    .ToDictionary(x => $"{x.PropertyName}", x => x.ErrorMessage);
+
+                    return Ok(BaseResponse<Dictionary<string, string>>.Error(response, 400));
+
+                }
                 var result = await reponsitory.SignUpAysc(model);
                 if (result.Succeeded)
                 {
-                    return Ok(result.Succeeded); // Use the Ok() method instead of Ok property
+                    return Ok(BaseResponse<string>.Success("tao thanh cong"));
                 }
                 return Ok(result.Errors);
+               
             }
             catch
             {

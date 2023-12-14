@@ -87,5 +87,6 @@ namespace BookShop.Model.Reponsitory
                 Token=await CreateToken(model)
             };
         }
+       
     }
 }

@@ -23,7 +23,23 @@ namespace BookShop.Controllers
         {
             try
             {
-                var resultValidion = _validation.Validate(bookModel);
+                var CreateBook = new BookVMvalidation
+                {
+                    id=0,
+                    Name = bookModel.Name,
+                    Supplier = bookModel.Supplier,
+                    Publisher = bookModel.Publisher,
+                    OldPrice = bookModel.OldPrice,
+                    NewPrice = bookModel.NewPrice,
+                    CategoryID = bookModel.CategoryID,
+                    Quantity = bookModel.Quantity,
+                    Author = bookModel.Author,
+                    Image = bookModel.Image,
+                    SecondaryImage = bookModel.SecondaryImage,
+                    Description = bookModel.Description,
+                    SeriesID = bookModel.SeriesID
+                };
+                var resultValidion = _validation.Validate(CreateBook);
                 if(!resultValidion.IsValid)
                 {
                     var errors = resultValidion.Errors.Select(e => new {e.PropertyName,e.ErrorMessage}).ToList();
@@ -92,8 +108,23 @@ namespace BookShop.Controllers
         {
             try
             {
-
-                var resultValidion = _validation.Validate(bookModel);
+                var updateBook = new BookVMvalidation
+                {
+                    id=id,
+                    Name = bookModel.Name,
+                    Supplier = bookModel.Supplier,
+                    Publisher = bookModel.Publisher,
+                    OldPrice = bookModel.OldPrice,
+                    NewPrice = bookModel.NewPrice,
+                    CategoryID = bookModel.CategoryID,
+                    Quantity = bookModel.Quantity,
+                    Author = bookModel.Author,
+                    Image = bookModel.Image,
+                    SecondaryImage = bookModel.SecondaryImage,
+                    Description = bookModel.Description,
+                    SeriesID = bookModel.SeriesID
+                };
+                var resultValidion = _validation.Validate(updateBook);
                 if (!resultValidion.IsValid)
                 {
                     var errors = resultValidion.Errors.Select(e => new { e.PropertyName, e.ErrorMessage }).ToList();

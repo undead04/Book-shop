@@ -116,7 +116,7 @@ namespace BookShop.Model.Server
                 UserID = shoppingModel.UserID,
                 Address = shoppingModel.Address,
                 Phone = shoppingModel.Phone,
-                OrderDate = DateTime.Now.Date,
+                OrderDate = DateTime.Now,
                 status = InvoiceStatus.WaitingConfirmation,
                 Price = total,
                 StatusPayment=StatusPayment.Pay
@@ -156,7 +156,7 @@ namespace BookShop.Model.Server
                 UserID = shopping.UserID,
                 Address = shopping.Address,
                 Phone = shopping.Phone,
-                OrderDate = DateTime.Now.Date,
+                OrderDate = DateTime.Now,
                 status = InvoiceStatus.WaitingConfirmation,
                 StatusPayment=StatusPayment.unpaid
                

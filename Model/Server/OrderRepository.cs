@@ -52,8 +52,8 @@ namespace BookShop.Model.Server
             return order.Select(x => new OrderModel
             {
                
-                OrderDate = x.OrderDate.ToString("dd/MM/yyyy"),
-                DateOfReceiptOfGoods=x.DateOfReceiptOfGoods.ToString("dd/MM/yyyy"),
+                OrderDate = x.OrderDate.ToString(),
+                DateOfReceiptOfGoods=x.DateOfReceiptOfGoods.ToString(),
                 Price =x.Price,
                 OrderID=x.ID,
                 Status=x.status.ToString(),
@@ -93,8 +93,8 @@ namespace BookShop.Model.Server
             {
                 OrderID = x.ID,
                 Status = x.status.ToString(),
-                OrderDate = x.OrderDate.ToString("dd/MM/yyyy"),
-                DateOfReceiptOfGoods = x.DateOfReceiptOfGoods.ToString("dd/MM/yyyy"),
+                OrderDate = x.OrderDate.ToString(),
+                DateOfReceiptOfGoods = x.DateOfReceiptOfGoods.ToString(),
                 Price=x.Price,
                 StatusPayment = x.StatusPayment.ToString()
 

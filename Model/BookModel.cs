@@ -34,4 +34,8 @@ namespace BookShop.Model
         public List<string>? NameCategory { get; set; }
         public string Description { get; set; } = string.Empty;
     }
+    public class BookVMvalidation : BookModel
+    {
+        public int id { get; set; }
+    }
 }

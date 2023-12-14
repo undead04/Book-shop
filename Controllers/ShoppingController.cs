@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Mvc;
 using Stripe.Checkout;
 using Microsoft.Extensions.Options;
+using BookShop.Validation;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Model;
 
 namespace BookShop.Controllers
 {
@@ -17,17 +19,29 @@ namespace BookShop.Controllers
         private readonly IShoppingReponsitory reponsitory;
         private static string s_wasmClientURL = string.Empty;
         private readonly IConfiguration configuration;
+        private readonly ShoppingValidation validations;
 
-        public ShoppingController(IShoppingReponsitory reponsitory, IConfiguration configuration)
+        public ShoppingController(IShoppingReponsitory reponsitory, IConfiguration configuration,ShoppingValidation validations)
         {
             this.reponsitory = reponsitory;
             this.configuration = configuration;
+            this.validations = validations;
         }
         [HttpPost("Buy")]
         public async Task<IActionResult> Buy(ShoppingModel shopping, IServiceProvider sp)
         {
             try
             {
+                var resultValidion = validations.Validate(shopping);
+                if (!resultValidion.IsValid)
+                {
+                    var errors = resultValidion.Errors.Select(e => new { e.PropertyName, e.ErrorMessage }).ToList();
+                    var response = errors
+                    .ToDictionary(x => $"{x.PropertyName}", x => x.ErrorMessage);
+
+                    return Ok(BaseResponse<Dictionary<string, string>>.Error(response, 400));
+
+                }
                 var validationBook = await reponsitory.ValidationShopping(shopping.Books);
                 if (!string.IsNullOrEmpty(validationBook))
                 {
@@ -100,6 +114,16 @@ namespace BookShop.Controllers
         {
             try
             {
+                var resultValidion = validations.Validate(shopping);
+                if (!resultValidion.IsValid)
+                {
+                    var errors = resultValidion.Errors.Select(e => new { e.PropertyName, e.ErrorMessage }).ToList();
+                    var response = errors
+                    .ToDictionary(x => $"{x.PropertyName}", x => x.ErrorMessage);
+
+                    return Ok(BaseResponse<Dictionary<string, string>>.Error(response, 400));
+
+                }
                 var validationUser = await reponsitory.ValidationUser(shopping.UserID);
                 if (!string.IsNullOrEmpty(validationUser))
                 {

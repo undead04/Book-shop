@@ -31,5 +31,33 @@ namespace BookShop.Controllers
                 return BadRequest();
             }
         }
+        [HttpGet("Comment/{BookID}/{Star}")]
+        public async Task<IActionResult> FilterComment(int BookID,int Star)
+        {
+            try
+            {
+                var comments = await _reponsitory.GetFilterComment(BookID,Star);
+                
+                return Ok(BaseResponse<List<CommentVM>>.WithData(comments));
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+        [HttpGet("Benefit/{Year}")]
+        public async Task<IActionResult> FilterComment(int Year)
+        {
+            try
+            {
+                var benefit = await _reponsitory.GetFilterBenefit(Year);
+
+                return Ok(BaseResponse<List<FilterBenefit>>.WithData(benefit));
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
     }
 }

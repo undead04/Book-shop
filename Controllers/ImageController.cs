@@ -1,9 +1,7 @@
 ﻿using BookShop.Model;
-using Microsoft.AspNetCore.Http;
+
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.StaticFiles;
-using Microsoft.Extensions.FileProviders;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Model;
+
 
 namespace BookShop.Controllers
 {
@@ -11,10 +9,10 @@ namespace BookShop.Controllers
     [ApiController]
     public class ImageController : ControllerBase
     {
-        private readonly IContentTypeProvider _contentTypeProvider;
+      
 
        
-        [HttpGet]
+        [HttpGet("{nameImage}")]
         public IActionResult GetImage(string nameImage)
         {
             try

@@ -1,7 +1,10 @@
 ﻿using BookShop.Model;
 using BookShop.Model.Server;
+using BookShop.Validation;
+using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Model;
 
 namespace BookShop.Controllers
 {
@@ -10,16 +13,28 @@ namespace BookShop.Controllers
     public class CommentController : ControllerBase
     {
         private readonly ICommentReponsitory reponsitory;
+        private CommentValidation validations;
 
-        public CommentController(ICommentReponsitory comment) 
+        public CommentController(ICommentReponsitory comment,CommentValidation validations) 
         {
             this.reponsitory = comment;
+            this.validations = validations;
         }
         [HttpPost]
         public async Task<IActionResult> CreateComment(CommentModel commentModel)
         {
             try
             {
+                var resultValidion = validations.Validate(commentModel);
+                if (!resultValidion.IsValid)
+                {
+                    var errors = resultValidion.Errors.Select(e => new { e.PropertyName, e.ErrorMessage }).ToList();
+                    var response = errors
+                    .ToDictionary(x => $"{x.PropertyName}", x => x.ErrorMessage);
+
+                    return Ok(BaseResponse<Dictionary<string, string>>.Error(response, 400));
+
+                }
                 var validation =await reponsitory.IsvalidComment(commentModel.BookId, commentModel.UserId,null);
                 if(!string.IsNullOrEmpty(validation))
                 {
@@ -56,6 +71,8 @@ namespace BookShop.Controllers
         {
             try
             {
+
+               
                 var validation = await reponsitory.IsvalidComment(null, null, CommentID);
                 if (!string.IsNullOrEmpty(validation))
                 {
