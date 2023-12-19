@@ -27,6 +27,7 @@ namespace BookShop.Data
         [Required]
         public string Description { get; set; } = string.Empty;
         public int SeriesID { get; set; }
+        public DateTime Create_at { get;set; }
         public ICollection<Images>? images { get; set; }
         public ICollection<BookCategorys>? bookCategories { get; set; }
         public ICollection<OrderDetail>? orderDetail { get; set; }

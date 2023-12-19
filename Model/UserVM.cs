@@ -8,6 +8,8 @@
         public string Avatar { get; set; } = string.Empty;
         public string Phone { get; set; } = string.Empty;
         public string ID { get; set; } = string.Empty;
+        public string About { get; set; } = string.Empty;
+        public string Create_at { get; set; } = string.Empty;   
     }
     public class PageUserVM
     {
@@ -19,5 +21,6 @@
         public string Address { get; set; } = string.Empty;
         public IFormFile? Avatar { get; set; }
         public string Phone { get; set; } = string.Empty;
+        public string About { get; set; } = string.Empty;
     }
 }

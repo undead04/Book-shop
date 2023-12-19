@@ -16,6 +16,7 @@ namespace BookShop.Model
         public List<IFormFile>? SecondaryImage { get; set; }
         public string Description { get; set; } = string.Empty;
         public int SeriesID { get; set; }
+
     }
     public class BookVM
     {
@@ -33,6 +34,7 @@ namespace BookShop.Model
         public double TotalStar { get; set; } =0;
         public List<string>? NameCategory { get; set; }
         public string Description { get; set; } = string.Empty;
+        public string Create_at { get; set; } = string.Empty;
     }
     public class BookVMvalidation : BookModel
     {

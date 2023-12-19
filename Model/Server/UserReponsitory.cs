@@ -26,7 +26,9 @@ namespace BookShop.Model.Server
                     Phone = user.PhoneNumber,
                     Email = user.Email,
                     ID = user.Id,
-                    Password=user.PasswordHash
+                    Password = user.PasswordHash,
+                    About = user.About,
+                    Create_at = user.Create_at.ToString()
                     
                 };
             }
@@ -42,7 +44,10 @@ namespace BookShop.Model.Server
                 Phone = user.PhoneNumber,
                 Email = user.Email,
                 ID=user.Id,
-                Password = user.PasswordHash
+                Password = user.PasswordHash,
+                About = user.About,
+                Create_at = user.Create_at.ToString()
+
             }).ToListAsync();
         }
 
@@ -68,6 +73,7 @@ namespace BookShop.Model.Server
 
             user.Address = userModel.Address;
             user.PhoneNumber = userModel.Phone;
+            user.About = userModel.About;
             string[] imageExtensions = { ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".tiff", ".tif", ".svg", ".webp", ".ico" };
             
             if (userModel.Avatar!=null)

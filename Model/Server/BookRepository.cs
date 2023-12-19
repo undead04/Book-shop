@@ -23,7 +23,8 @@ namespace BookShop.Model.Reponsitory
                 Author=bookModel.Author,
                 SeriesID=bookModel.SeriesID,
                 Quantity=bookModel.Quantity,
-                Description=bookModel.Description
+                Description=bookModel.Description,
+                Create_at=DateTime.Now
             };
             await _context.books.AddAsync(book);
             await _context.SaveChangesAsync();
@@ -134,7 +135,7 @@ namespace BookShop.Model.Reponsitory
                 SecondaryImage=x.images!.Select(x=>x.Image).ToList(),
                 NameCategory = x.bookCategories!.Select(x => x.Category!.Name).ToList(),
                 Quantity=x.Quantity,
-                
+                Create_at=x.Create_at.ToString(),
                 TotalStar = x.comments.Any()? Math.Round((double)x.comments.Select(x => x.Star).Sum() / x.comments.Select(x => x.Star).Count(),2):0
 
             }).ToListAsync();
@@ -151,7 +152,7 @@ namespace BookShop.Model.Reponsitory
                 {
                     ID = book.ID,
                     Supplier = book.Supplier,
-
+                    Create_at=book.Create_at.ToString(),
                     Image = book.Image,
                     Name = book.Name,
                     Author = book.Author,
@@ -186,6 +187,7 @@ namespace BookShop.Model.Reponsitory
             book.Publisher = bookModel.Publisher;
             book.SeriesID = bookModel.SeriesID;
             book.Description = bookModel.Description;
+            
             string[] imageExtensions = { ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".tiff", ".tif", ".svg", ".webp", ".ico" };
 
             if (bookModel.Image != null)

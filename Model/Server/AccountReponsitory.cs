@@ -51,7 +51,7 @@ namespace BookShop.Model.Reponsitory
             {
                 UserName = model.UserName,
                 Email = model.Email,
-              
+                Create_at=DateTime.Now,
 
             };
             var result= await userManger.CreateAsync(user, model.Password);
