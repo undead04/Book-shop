@@ -17,27 +17,24 @@ namespace BookShop.Model
     }
     public class CommentVM
     {
+        public string UserID { get; set; } = string.Empty;
         public string UserName { get; set; } = string.Empty;
         public string Comment { get; set; } = string.Empty;
-        public int ID { get; set; }
-
         public int Star { get; set; }
+        public string CreateAt { get; set; } = string.Empty;
+
+        public string UserNameAdmin { get; set; } = string.Empty;
         public string replay { get; set; } = string.Empty;
 
 
     }
-    public class UpdateComment
-    {
-       
-
-        public string Comment { get; set; } = string.Empty;
-
-        [Range(0,5)]
-        public int Star { get; set; }
-    }
+    
     public class ReplayModel
     {
-        public int CommentUserId { get; set; }
+        public string UserID { get; set; } = string.Empty;
+        public int BookID { get; set; }
+      
+        public string AdminID { get; set; } = string.Empty;
         public string Comment { get; set; } = string.Empty;
     }
 }

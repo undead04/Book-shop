@@ -6,11 +6,12 @@ namespace BookShop.Data
     [Table("replayAdmins")]
     public class ReplyAdmin
     {
-        [Key]
-        public int Id { get; set; }
-        public int CommentID { get; set; }
+        public string AdminID { get; set; } = string.Empty;
+        public string UserID { get; set; } = string.Empty;
+        public int BookID { get; set; }
         public string AdminComment { get; set; } = string.Empty;
         public Comment?comment { get; set; }
+        public ApplicationUser? User { get; set; }
 
 
     }

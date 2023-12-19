@@ -1,5 +1,5 @@
 ﻿using BookShop.Data;
-using BookShop.Migrations;
+
 using BookShop.Model;
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;

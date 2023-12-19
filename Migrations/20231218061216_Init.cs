@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BookShop.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -32,6 +32,7 @@ namespace BookShop.Migrations
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Avatar = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    About = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -197,7 +198,8 @@ namespace BookShop.Migrations
                     Price = table.Column<double>(type: "float", nullable: false),
                     OrderDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DateOfReceiptOfGoods = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    status = table.Column<int>(type: "int", nullable: false)
+                    status = table.Column<int>(type: "int", nullable: false),
+                    StatusPayment = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -224,6 +226,7 @@ namespace BookShop.Migrations
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     Author = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Image = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     SeriesID = table.Column<int>(type: "int", nullable: false),
                     serieID = table.Column<int>(type: "int", nullable: true)
                 },
@@ -265,8 +268,6 @@ namespace BookShop.Migrations
                 name: "Comments",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
                     UserID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     BookID = table.Column<int>(type: "int", nullable: false),
                     Star = table.Column<int>(type: "int", nullable: false),
@@ -275,19 +276,19 @@ namespace BookShop.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Comments", x => x.Id);
+                    table.PrimaryKey("PK_Comments", x => new { x.BookID, x.UserID });
                     table.ForeignKey(
                         name: "FK_Comments_AspNetUsers_UserID",
                         column: x => x.UserID,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Comments_Books_BookID",
                         column: x => x.BookID,
                         principalTable: "Books",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -340,20 +341,26 @@ namespace BookShop.Migrations
                 name: "replayAdmins",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CommentID = table.Column<int>(type: "int", nullable: false),
-                    Comment = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    AdminID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    UserID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    BookID = table.Column<int>(type: "int", nullable: false),
+                    AdminComment = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_replayAdmins", x => x.Id);
+                    table.PrimaryKey("PK_replayAdmins", x => new { x.BookID, x.UserID, x.AdminID });
                     table.ForeignKey(
-                        name: "FK_replayAdmins_Comments_CommentID",
-                        column: x => x.CommentID,
-                        principalTable: "Comments",
+                        name: "FK_replayAdmins_AspNetUsers_AdminID",
+                        column: x => x.AdminID,
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_replayAdmins_Comments_BookID_UserID",
+                        columns: x => new { x.BookID, x.UserID },
+                        principalTable: "Comments",
+                        principalColumns: new[] { "BookID", "UserID" },
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -418,11 +425,6 @@ namespace BookShop.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Comments_BookID",
-                table: "Comments",
-                column: "BookID");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Comments_UserID",
                 table: "Comments",
                 column: "UserID");
@@ -443,9 +445,14 @@ namespace BookShop.Migrations
                 column: "UserID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_replayAdmins_CommentID",
+                name: "IX_replayAdmins_AdminID",
                 table: "replayAdmins",
-                column: "CommentID",
+                column: "AdminID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_replayAdmins_BookID_UserID",
+                table: "replayAdmins",
+                columns: new[] { "BookID", "UserID" },
                 unique: true);
         }
 

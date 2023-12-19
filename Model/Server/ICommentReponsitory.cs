@@ -3,10 +3,10 @@
     public interface ICommentReponsitory
     {
         Task Comment(CommentModel comment);
-        Task UpdateComment(int ID,UpdateComment commentMD);
+        Task UpdateComment(CommentModel commentModel);
         Task ReplyAdmin(ReplayModel replay);
         Task<List<CommentVM>> GetCommentBook(int bookID);
-        Task<string> IsvalidComment(int? bookID,string? userID,int? reviewID);
+        Task<string> IsvalidComment(int? bookID,string? userID);
         
         
 

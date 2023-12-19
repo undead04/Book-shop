@@ -7,7 +7,12 @@
         public string Email { get; set; } = string.Empty;
         public string Avatar { get; set; } = string.Empty;
         public string Phone { get; set; } = string.Empty;
-        public string ID { get; set; }
+        public string ID { get; set; } = string.Empty;
+    }
+    public class PageUserVM
+    {
+        public List<UserVM>? User { get; set; }
+        public int TotalPage { get; set; }
     }
     public class UserModel
     {

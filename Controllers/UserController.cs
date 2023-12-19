@@ -33,12 +33,18 @@ namespace BookShop.Controllers
             }
         }
         [HttpGet]
-        public async Task<IActionResult> GetAllUser()
+        public async Task<IActionResult> GetAllUser(int take=25,int page=1)
         {
             try
             {
-               
-                return Ok(BaseResponse<List<UserVM>>.WithData(await reponsitory.GetAllUser()));
+                var user = await reponsitory.GetAllUser();
+                int totalPage = (int)Math.Ceiling((double)user.Count / take);
+                user=user.Skip((page-1)*take).Take(take).ToList();
+                return Ok(BaseResponse<PageUserVM>.WithData(new PageUserVM
+                {
+                    User=user,
+                    TotalPage=totalPage,
+                }));
             }
             catch
             {

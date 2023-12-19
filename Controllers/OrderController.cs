@@ -19,7 +19,7 @@ namespace BookShop.Controllers
             this.reponsitory = reponsitory;
         }
         [HttpGet]
-        public async Task<IActionResult> GetOrder(InvoiceStatus? status)
+        public async Task<IActionResult> GetOrder(InvoiceStatus? status,int page = 1, int take = 25)
         {
             try
             {
@@ -28,7 +28,13 @@ namespace BookShop.Controllers
                 {
                     return Ok(BaseResponse<string>.Success("Khong co don hang"));
                 }
-                return Ok(BaseResponse<List<OrderModel>>.WithData(order));
+                int totalPage = (int)Math.Ceiling((double)order.Count / take);
+                order = order.Skip((page - 1) * take).Take(take).ToList();
+                return Ok(BaseResponse<PageOrder>.WithData(new PageOrder
+                {
+                    Order=order,
+                    TotalPage= totalPage
+                }));
             }
             catch
             {
@@ -96,7 +102,7 @@ namespace BookShop.Controllers
             }
         }
         [HttpGet("User/{UserId}")]
-        public async Task<IActionResult> GetOrderUser(string UserId, InvoiceStatus? Status)
+        public async Task<IActionResult> GetOrderUser(string UserId, InvoiceStatus? Status,int page=1,int take=25)
         {
             try
             {
@@ -105,8 +111,14 @@ namespace BookShop.Controllers
                 {
                     return Ok(BaseResponse<string>.Error(IsvalidOrder, 400));
                 }
-                
-                return Ok(BaseResponse<List<OrderModel>>.WithData(await reponsitory.OrderDetailUser(Status, UserId)));
+                var order=await reponsitory.OrderDetailUser(Status, UserId);
+                int totalPage = (int)Math.Ceiling((double)order.Count / take);
+                order = order.Skip((page - 1) * take).Take(take).ToList();
+                return Ok(BaseResponse<PageOrder>.WithData(new PageOrder
+                {
+                    Order = order,
+                    TotalPage = totalPage
+                }));
             }
             catch
             {

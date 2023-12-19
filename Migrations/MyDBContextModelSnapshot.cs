@@ -27,6 +27,10 @@ namespace BookShop.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("About")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
@@ -189,14 +193,11 @@ namespace BookShop.Migrations
 
             modelBuilder.Entity("BookShop.Data.Comment", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
                     b.Property<int>("BookID")
                         .HasColumnType("int");
+
+                    b.Property<string>("UserID")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("Create_at")
                         .HasColumnType("datetime2");
@@ -208,13 +209,7 @@ namespace BookShop.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserID")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BookID");
+                    b.HasKey("BookID", "UserID");
 
                     b.HasIndex("UserID");
 
@@ -312,22 +307,24 @@ namespace BookShop.Migrations
 
             modelBuilder.Entity("BookShop.Data.ReplyAdmin", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("BookID")
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<string>("UserID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("AdminID")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("AdminComment")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("CommentID")
-                        .HasColumnType("int");
+                    b.HasKey("BookID", "UserID", "AdminID");
 
-                    b.HasKey("Id");
+                    b.HasIndex("AdminID");
 
-                    b.HasIndex("CommentID")
+                    b.HasIndex("BookID", "UserID")
                         .IsUnique();
 
                     b.ToTable("replayAdmins");
@@ -516,13 +513,13 @@ namespace BookShop.Migrations
                     b.HasOne("BookShop.Data.Book", "book")
                         .WithMany("comments")
                         .HasForeignKey("BookID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("BookShop.Data.ApplicationUser", "User")
                         .WithMany("comments")
                         .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -573,11 +570,19 @@ namespace BookShop.Migrations
 
             modelBuilder.Entity("BookShop.Data.ReplyAdmin", b =>
                 {
+                    b.HasOne("BookShop.Data.ApplicationUser", "User")
+                        .WithMany("replyAdmins")
+                        .HasForeignKey("AdminID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("BookShop.Data.Comment", "comment")
                         .WithOne("replyAdmin")
-                        .HasForeignKey("BookShop.Data.ReplyAdmin", "CommentID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("BookShop.Data.ReplyAdmin", "BookID", "UserID")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("User");
 
                     b.Navigation("comment");
                 });
@@ -638,6 +643,8 @@ namespace BookShop.Migrations
                     b.Navigation("Orders");
 
                     b.Navigation("comments");
+
+                    b.Navigation("replyAdmins");
                 });
 
             modelBuilder.Entity("BookShop.Data.Book", b =>

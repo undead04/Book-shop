@@ -6,8 +6,7 @@ namespace BookShop.Data
     [Table("Comments")]
     public class Comment
     {
-        [Key]
-        public int Id { get; set; }
+        
         public string UserID { get; set; } = string.Empty;
         public int BookID { get; set; }
         [Required,Range(0,5)]
@@ -15,7 +14,7 @@ namespace BookShop.Data
         [Required]
         public string UserComment { get; set; }=string.Empty;
         [Required]
-        public DateTime Create_at { get; set; }
+        public DateTime Create_at { get; set; }=DateTime.Now;
         public Book? book { get; set; }
         public ApplicationUser? User { get; set; }
         public ReplyAdmin? replyAdmin { get; set; }

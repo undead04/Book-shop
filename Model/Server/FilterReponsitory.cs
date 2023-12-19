@@ -104,7 +104,7 @@ namespace BookShop.Model.Reponsitory
             {
                 UserName=co.User.UserName,
                 Comment=co.UserComment,
-                ID=co.Id,
+                //ID=co.Id,
                 Star=co.Star,
                 replay=co.replyAdmin?.AdminComment,
 

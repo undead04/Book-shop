@@ -25,13 +25,20 @@ namespace BookShop.Model
     
     public class OrderModel
     {
-       
+
         public double Price { get; set; }
         public string OrderDate { get; set; } = string.Empty;
         public string DateOfReceiptOfGoods { get; set; } = string.Empty;
         public string Status { get; set; } = string.Empty;
         public int OrderID { get; set; }
-        public string StatusPayment { get; set; } = string.Empty; 
-       
+        public string StatusPayment { get; set; } = string.Empty;
+
+        
     }
+    public class PageOrder
+    {
+        public IList<OrderModel>? Order { get; set; }
+        public int TotalPage { get; set; }
+    }
+
 }

@@ -76,13 +76,13 @@ namespace BookShop.Controllers
 
                     };
                     Session session = sessionService.Get(sessionId, options);
-                    await reponsitory.CheckoutSuccess(shopping, session);
+                    
                     var checkoutOrderResponse = new CheckoutOrderResponse()
                     {
                         SessionId = sessionId,
                         PubKey = pubKey
                     };
-
+                    await reponsitory.CheckoutSuccess(shopping, session);
                     return Ok(BaseResponse<CheckoutOrderResponse>.WithData(checkoutOrderResponse));
                 }
                 else

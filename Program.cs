@@ -15,6 +15,9 @@ using Stripe;
 using Swashbuckle.AspNetCore.Filters;
 using System.Reflection;
 using System.Text;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -99,6 +102,8 @@ builder.Services.AddCors(options =>
     });
 });
 
+// tạo role
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -114,5 +119,18 @@ app.UseAuthentication();
 app.UseCors("AllowSpecificOrigin");
 app.UseAuthorization();
 app.MapControllers();
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    var roles = new[] {AppRole.Customer,AppRole.Admin};
+
+    foreach (var role in roles)
+    {
+        if (!await roleManager.RoleExistsAsync(role))
+        {
+            await roleManager.CreateAsync(new IdentityRole(role));
+        }
+    }
+}
 
 app.Run();

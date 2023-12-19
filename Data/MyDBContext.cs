@@ -68,19 +68,25 @@ namespace BookShop.Data
             });
             modelBuilder.Entity<Comment>(e =>
             {
+                e.HasKey(e => new {e.BookID,e.UserID});
                 e.HasOne(e => e.book)
                 .WithMany(e => e.comments)
                 .HasForeignKey(e => e.BookID)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
                 e.HasOne(e=>e.User)
                 .WithMany(e=>e.comments)
-                .HasForeignKey(e=>e.UserID) .OnDelete(DeleteBehavior.Cascade);
+                .HasForeignKey(e=>e.UserID) .OnDelete(DeleteBehavior.Restrict);
             });
             modelBuilder.Entity<ReplyAdmin>(e =>
             {
+                e.HasKey(e => new { e.BookID, e.UserID, e.AdminID });
                 e.HasOne(e=>e.comment)
                 .WithOne(e=>e.replyAdmin)
-                .HasForeignKey<ReplyAdmin>(e => e.CommentID).OnDelete(DeleteBehavior.Cascade);
+                .HasForeignKey<ReplyAdmin>(e => new {e.BookID,e.UserID}).OnDelete(DeleteBehavior.Restrict);
+                e.HasOne(e => e.User)
+               .WithMany(e=>e.replyAdmins)
+               .HasForeignKey(e=>e.AdminID)
+               .OnDelete(DeleteBehavior.Restrict);
             });
         }
     }

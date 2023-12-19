@@ -20,8 +20,8 @@ namespace BookShop.Model.Server
                 BookID = comment.BookId,
                 UserID=comment.UserId,
                 UserComment=comment.Comment,
-                Star=comment.Star
-
+                Star=comment.Star,
+                Create_at=DateTime.Now,
             };
             await context.comments.AddAsync(review);
             await context.SaveChangesAsync();
@@ -29,26 +29,28 @@ namespace BookShop.Model.Server
 
         public async Task<List<CommentVM>> GetCommentBook(int  bookID)
         {
-            var commnet = await context.comments.Include(f=>f.User).Include(f=>f.replyAdmin).Where(x => x.BookID == bookID).ToListAsync();
+            var commnet = await context.comments.Include(f=>f.User).Include(f=>f.replyAdmin).ThenInclude(f=>f.User).Where(x => x.BookID == bookID).ToListAsync();
             return commnet.Select(x => new CommentVM
             {
                 UserName=x.User?.UserName,
                 Star=x.Star,
+                UserID=x.User.Id,
+                CreateAt=x.Create_at.ToString(),
                 Comment=x.UserComment,
                 replay=x.replyAdmin?.AdminComment,
-                ID=x.Id
+                UserNameAdmin=x.replyAdmin?.User.UserName,
                 
             }).ToList();
         }
 
-        public async Task<string> IsvalidComment(int? bookID,string? userID,int? reviewID)
+        public async Task<string> IsvalidComment(int? bookID,string? userID)
         {
             if (bookID.HasValue)
             {
                 var book = await context.books.Include(f=>f.orderDetail).FirstOrDefaultAsync(x => x.ID == bookID);
                 if (book == null)
                 {
-                    return "Khong tim thay id nay";
+                    return "Khong tim thay Bookid nay";
                 }
                 
             }
@@ -61,18 +63,11 @@ namespace BookShop.Model.Server
                     return "Khong tim thay user nay";
                 }
             }
-            if(reviewID.HasValue)
-            {
-                var review = await context.comments.FirstOrDefaultAsync(x => x.Id == reviewID);
-                if(review == null)
-                {
-                    return "Khong tim thay comment nay";
-                }
-            }
+           
             if (bookID.HasValue && !string.IsNullOrEmpty(userID))
             {
-                var order = await context.ordersDetails.FirstOrDefaultAsync(x => x.BookID == bookID && x.Order.UserID == userID);
-                if (order == null)
+                var order = await context.ordersDetails.Include(f=>f.Order).FirstOrDefaultAsync(x => x.BookID == bookID && x.Order.UserID == userID);
+                if (order == null || order.Order?.status!=InvoiceStatus.Complete)
                 {
                     return "Comment That bai";
                 }
@@ -87,18 +82,22 @@ namespace BookShop.Model.Server
             var comment = new ReplyAdmin
             {
                 AdminComment = replay.Comment,
-                CommentID = replay.CommentUserId,
+                AdminID = replay.AdminID,
+                UserID = replay.UserID,
+                BookID=replay.BookID
+               
             };
             await context.replyAdmins.AddAsync(comment);
            await context.SaveChangesAsync();
         }
 
-        public async Task UpdateComment(int ID,UpdateComment commentMD)
+        public async Task UpdateComment(CommentModel commentModel)
         {
-            var comment = await context.comments.FirstOrDefaultAsync(x => x.Id==ID);
-            comment.Star = commentMD.Star;
-            comment.UserComment = commentMD.Comment;
-           await context.SaveChangesAsync();
+            var comment = await context.comments.FirstOrDefaultAsync(x => x.UserID==commentModel.UserId && x.BookID==commentModel.BookId);
+            comment.Star = commentModel.Star;
+            comment.UserComment = commentModel.Comment;
+            comment.Create_at = DateTime.Now;
+            await context.SaveChangesAsync();
         }
     }
 }

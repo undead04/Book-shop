@@ -8,7 +8,9 @@ namespace BookShop.Data
         [Required]
         public string? Avatar { get; set; } = string.Empty;
         public string Address { get; set; } = string.Empty;
+        public string About { get; set; } = string.Empty;
         public ICollection<Order>? Orders { get; set; }
         public ICollection<Comment>? comments { get; set; }
+        public ICollection<ReplyAdmin>? replyAdmins { get; set; }
     }
 }

@@ -35,7 +35,7 @@ namespace BookShop.Controllers
                     return Ok(BaseResponse<Dictionary<string, string>>.Error(response, 400));
 
                 }
-                var validation =await reponsitory.IsvalidComment(commentModel.BookId, commentModel.UserId,null);
+                var validation =await reponsitory.IsvalidComment(commentModel.BookId, commentModel.UserId);
                 if(!string.IsNullOrEmpty(validation))
                 {
                     return Ok(BaseResponse<string>.Error(validation, 400));
@@ -53,7 +53,7 @@ namespace BookShop.Controllers
         {
             try
             {
-                var validation = await reponsitory.IsvalidComment(BookID,null, null);
+                var validation = await reponsitory.IsvalidComment(BookID,null);
                 if (!string.IsNullOrEmpty(validation))
                 {
                     return Ok(BaseResponse<string>.Error(validation, 400));
@@ -66,19 +66,19 @@ namespace BookShop.Controllers
                 return BadRequest();
             }
         }
-        [HttpPut("{CommentID}")]
-        public async Task<IActionResult> UpdateComment(int CommentID,UpdateComment commentModel)
+        [HttpPut]
+        public async Task<IActionResult> UpdateComment( CommentModel commentModel)
         {
             try
             {
 
                
-                var validation = await reponsitory.IsvalidComment(null, null, CommentID);
+                var validation = await reponsitory.IsvalidComment(commentModel.BookId,commentModel.UserId);
                 if (!string.IsNullOrEmpty(validation))
                 {
                     return Ok(BaseResponse<string>.Error(validation, 400));
                 }
-                await reponsitory.UpdateComment(CommentID, commentModel);
+                await reponsitory.UpdateComment( commentModel);
                 return Ok(BaseResponse<string>.Success("Thanh cong"));
             }
             catch
@@ -91,7 +91,7 @@ namespace BookShop.Controllers
         {
             try
             {
-                var validation = await reponsitory.IsvalidComment(null, null, replayModel.CommentUserId);
+                var validation = await reponsitory.IsvalidComment(null, null);
                 if (!string.IsNullOrEmpty(validation))
                 {
                     return Ok(BaseResponse<string>.Error(validation, 400));
