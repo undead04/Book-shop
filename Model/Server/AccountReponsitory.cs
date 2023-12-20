@@ -38,7 +38,7 @@ namespace BookShop.Model.Reponsitory
             var authenKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]));
             var token = new JwtSecurityToken(
                 issuer: configuration["JWT:ValidIssuer"],
-                audience: configuration["JWT:ValiAudience"],
+                audience: configuration["JWT:ValidAudience"],
                 expires: DateTime.Now.AddMinutes(30),
                 claims:authClaims,
                 signingCredentials: new SigningCredentials(authenKey, SecurityAlgorithms.HmacSha256Signature));

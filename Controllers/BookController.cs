@@ -1,6 +1,7 @@
 ﻿using BookShop.Model;
 using BookShop.Model.Reponsitory;
 using BookShop.Validation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,7 +19,7 @@ namespace BookShop.Controllers
             _reponsitory = reponsitory;
             _validation = validation;
         }
-        [HttpPost]
+        [HttpPost,Authorize(Roles =AppRole.Admin)]
         public async Task<IActionResult> Create([FromForm] BookModel bookModel)
         {
             try
@@ -37,7 +38,8 @@ namespace BookShop.Controllers
                     Image = bookModel.Image,
                     SecondaryImage = bookModel.SecondaryImage,
                     Description = bookModel.Description,
-                    SeriesID = bookModel.SeriesID
+                    SeriesID = bookModel.SeriesID,
+                    Create=bookModel.Create,
                 };
                 var resultValidion = _validation.Validate(CreateBook);
                 if(!resultValidion.IsValid)
@@ -56,7 +58,7 @@ namespace BookShop.Controllers
                 return BadRequest();
             }
         }
-        [HttpGet]
+        [HttpGet,Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAll()
         {
             try
@@ -122,7 +124,8 @@ namespace BookShop.Controllers
                     Image = bookModel.Image,
                     SecondaryImage = bookModel.SecondaryImage,
                     Description = bookModel.Description,
-                    SeriesID = bookModel.SeriesID
+                    SeriesID = bookModel.SeriesID,
+                    Create = bookModel.Create,
                 };
                 var resultValidion = _validation.Validate(updateBook);
                 if (!resultValidion.IsValid)

@@ -36,6 +36,8 @@ namespace BookShop.Validation
                 .Must(IsNumber).WithMessage("Phải là số");
             RuleFor(x => x.CategoryID).NotNull().WithMessage("khong dc trong");
             RuleFor(x => x.Description).NotEmpty().WithMessage("Khong dc trong");
+            RuleFor(x => x.Create)
+             .NotEmpty().WithMessage("Ngày tạo không được trống");
 
 
         }
