@@ -2,7 +2,7 @@
 {
     public interface ICategoryReponsitory
     {
-        Task<List<CategoryVM>> GetAll();
+        Task<List<CategoryVM>> GetAll(string?name);
         Task<CategoryVM> GetById(int id);
         Task<string> Create(CategoryModel categoryModel);
         Task<string> Update(int id,CategoryModel categoryModel);

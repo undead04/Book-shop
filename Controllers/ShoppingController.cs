@@ -9,6 +9,7 @@ using Stripe.Checkout;
 using Microsoft.Extensions.Options;
 using BookShop.Validation;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Model;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BookShop.Controllers
 {
@@ -28,6 +29,7 @@ namespace BookShop.Controllers
             this.validations = validations;
         }
         [HttpPost("Buy")]
+        [Authorize]
         public async Task<IActionResult> Buy(ShoppingModel shopping, IServiceProvider sp)
         {
             try
@@ -96,6 +98,7 @@ namespace BookShop.Controllers
             }
         }
         [HttpGet("success")]
+        [Authorize]
         public async Task<IActionResult> CheckoutSuccess(string sessionId)
         {
             try
@@ -110,6 +113,7 @@ namespace BookShop.Controllers
             }
         }
         [HttpPost("BuyOffline")]
+        [Authorize]
         public async Task<IActionResult> Buy(ShoppingModel shopping)
         {
             try

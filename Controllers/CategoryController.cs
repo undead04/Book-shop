@@ -7,6 +7,7 @@ using BookShop.Validation;
 using FluentValidation.Internal;
 using FluentValidation;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BookShop.Controllers
 {
@@ -23,6 +24,7 @@ namespace BookShop.Controllers
             _validation = validations;
         }
         [HttpPost]
+        [Authorize(Roles = AppRole.Admin)]
         public async Task<IActionResult> Create(CategoryModel categoryModel)
         {
             try
@@ -51,11 +53,19 @@ namespace BookShop.Controllers
             }
         }
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll(string? name, int page = 1, int take = 25)
         {
             try
             {
-                return Ok(BaseResponse<List<CategoryVM>>.WithData(await _reponsitory.GetAll()));
+                var category = await _reponsitory.GetAll(name);
+                int totalPage=(int)Math.Ceiling((double)category.Count/take);
+                category = category.Skip((page - 1) * take).Take(take).ToList();
+                return Ok(BaseResponse<FilterCategory>.WithData(new FilterCategory
+                {
+                    Categorys=category,
+                    TotalPage=totalPage
+                }));
+               
             }
             catch
             {
@@ -80,6 +90,7 @@ namespace BookShop.Controllers
             }
         }
         [HttpPut("{id}")]
+        [Authorize(Roles = AppRole.Admin)]
         public async Task<IActionResult> Update(int id, CategoryModel categoryModel)
         {
             try
@@ -114,6 +125,7 @@ namespace BookShop.Controllers
             }
         }
         [HttpDelete("{id}")]
+        [Authorize(Roles = AppRole.Admin)]
         public async Task<IActionResult> Delete(int id)
         {
             try

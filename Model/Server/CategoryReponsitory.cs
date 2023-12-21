@@ -34,17 +34,23 @@ namespace BookShop.Model.Reponsitory
             return "Thanh cong";
         }
 
-        public async Task<List<CategoryVM>> GetAll()
+        public async Task<List<CategoryVM>> GetAll(string? name)
         {
-            var category = await _context.categories.Select(c => new CategoryVM
+            var category = _context.categories.AsQueryable();
+            if (!string.IsNullOrEmpty(name))
             {
-                ID=c.ID,
-                Name=c.Name,
-            }).ToListAsync();
-            return category;
+                category = category.Where(ca => ca.Name.Contains(name));
+            }
+            category = category.OrderBy(x => x.Name);
+            return category.Select(c => new CategoryVM
+            {
+                ID = c.ID,
+                Name = c.Name,
+            }).ToList();
         }
 
-        public async  Task<CategoryVM> GetById(int id)
+
+            public async  Task<CategoryVM> GetById(int id)
         {
             var category=await _context.categories.Where(x=>x.ID==id).FirstOrDefaultAsync();
             if(category == null)

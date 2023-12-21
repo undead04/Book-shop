@@ -1,5 +1,6 @@
 ﻿using BookShop.Model;
 using BookShop.Model.Reponsitory;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -46,6 +47,7 @@ namespace BookShop.Controllers
             }
         }
         [HttpGet("Benefit/{Year}")]
+        [Authorize(Roles = AppRole.Admin)]
         public async Task<IActionResult> FilterComment(int Year)
         {
             try

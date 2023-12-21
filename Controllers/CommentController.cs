@@ -2,6 +2,7 @@
 using BookShop.Model.Server;
 using BookShop.Validation;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Model;
@@ -21,6 +22,7 @@ namespace BookShop.Controllers
             this.validations = validations;
         }
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> CreateComment(CommentModel commentModel)
         {
             try
@@ -67,6 +69,7 @@ namespace BookShop.Controllers
             }
         }
         [HttpPut]
+        [Authorize]
         public async Task<IActionResult> UpdateComment( CommentModel commentModel)
         {
             try
@@ -87,6 +90,7 @@ namespace BookShop.Controllers
             }
         }
         [HttpPost("replay")]
+        [Authorize(Roles = AppRole.Admin)]
         public async Task<IActionResult> CreateAdminCommnet(ReplayModel replayModel)
         {
             try

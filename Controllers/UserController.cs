@@ -1,5 +1,6 @@
 ﻿using BookShop.Model;
 using BookShop.Model.Server;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,6 +17,7 @@ namespace BookShop.Controllers
             this.reponsitory = reponsitory;
         }
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<IActionResult> GetUser(string id)
         {
             try
@@ -33,11 +35,12 @@ namespace BookShop.Controllers
             }
         }
         [HttpGet]
-        public async Task<IActionResult> GetAllUser(int take=25,int page=1)
+        [Authorize(Roles = AppRole.Admin)]
+        public async Task<IActionResult> GetAllUser(string?search,int take=25,int page=1)
         {
             try
             {
-                var user = await reponsitory.GetAllUser();
+                var user = await reponsitory.GetAllUser(search);
                 int totalPage = (int)Math.Ceiling((double)user.Count / take);
                 user=user.Skip((page-1)*take).Take(take).ToList();
                 return Ok(BaseResponse<PageUserVM>.WithData(new PageUserVM
@@ -52,6 +55,7 @@ namespace BookShop.Controllers
             }
         }
         [HttpDelete("{id}")]
+        [Authorize(Roles = AppRole.Admin)]
         public async Task<IActionResult> DeleteUser(string id)
         {
             try
@@ -73,6 +77,7 @@ namespace BookShop.Controllers
             }
         }
         [HttpPut("{id}")]
+        [Authorize(Roles = AppRole.Admin)]
         public async Task<IActionResult> UpdateUser(string id,[FromForm]UserModel user)
         {
             try

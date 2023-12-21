@@ -1,6 +1,7 @@
 ﻿using BookShop.Data;
 using BookShop.Model;
 using BookShop.Model.Server;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,6 +20,7 @@ namespace BookShop.Controllers
             this.reponsitory = reponsitory;
         }
         [HttpGet]
+        [Authorize(Roles = AppRole.Admin)]
         public async Task<IActionResult> GetOrder(InvoiceStatus? status,int page = 1, int take = 25)
         {
             try
@@ -42,6 +44,7 @@ namespace BookShop.Controllers
             }
         }
         [HttpPut("Confirmation/{OrderID}")]
+        [Authorize(Roles = AppRole.Admin)]
         public async Task<IActionResult> confirmationOrder(int OrderID)
         {
             try
@@ -63,6 +66,7 @@ namespace BookShop.Controllers
             }
         }
         [HttpPut("GiveOrder/{OrderID}")]
+        [Authorize(Roles = AppRole.Admin)]
         public async Task<IActionResult> GiveOrder(int OrderID)
         {
             try
@@ -85,6 +89,7 @@ namespace BookShop.Controllers
             }
         }
         [HttpGet("{OrderID}")]
+        [Authorize]
         public async Task<IActionResult> GetOrderDetail(int OrderID)
         {
             try
@@ -102,6 +107,7 @@ namespace BookShop.Controllers
             }
         }
         [HttpGet("User/{UserId}")]
+        [Authorize]
         public async Task<IActionResult> GetOrderUser(string UserId, InvoiceStatus? Status,int page=1,int take=25)
         {
             try
@@ -126,6 +132,7 @@ namespace BookShop.Controllers
             }
         }
         [HttpGet("cancelOrder/{orderID}")]
+        [Authorize]
         public async Task<IActionResult> CancelOrder(int orderID)
         {
             try

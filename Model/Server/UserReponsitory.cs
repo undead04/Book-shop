@@ -35,9 +35,15 @@ namespace BookShop.Model.Server
             return null;
            
         }
-        public async Task<List<UserVM>> GetAllUser()
+        public async Task<List<UserVM>> GetAllUser(string? search)
         {
-            return await context.Users.Select(user => new UserVM
+            var user =context.Users.AsQueryable();
+            if (!string.IsNullOrEmpty(search))
+            {
+                user = user.Where(us => us.UserName.Contains(search) || us.Email.Contains(search));
+            }
+            user = user.OrderBy(us => us.UserName).ThenBy(us => us.Email);
+            return user.Select(user => new UserVM
             {
                 UserName = user.UserName,
                 Avatar = user.Avatar,
@@ -48,7 +54,7 @@ namespace BookShop.Model.Server
                 About = user.About,
                 Create_at = user.Create_at.ToString()
 
-            }).ToListAsync();
+            }).ToList();
         }
 
         public async Task DeleteUser(string UserID)

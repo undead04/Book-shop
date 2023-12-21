@@ -58,7 +58,7 @@ namespace BookShop.Controllers
                 return BadRequest();
             }
         }
-        [HttpGet,Authorize(Roles = "Admin")]
+        [HttpGet]
         public async Task<IActionResult> GetAll()
         {
             try
@@ -71,6 +71,7 @@ namespace BookShop.Controllers
             }
         }
         [HttpGet("{id}")]
+        
         public async Task<IActionResult> GetByID(int id)
         {
             try
@@ -89,6 +90,7 @@ namespace BookShop.Controllers
         }
         
         [HttpDelete("{id}")]
+        [Authorize(Roles = AppRole.Admin)]
         public async Task<IActionResult> Delete(int id)
         {
             try
@@ -106,6 +108,7 @@ namespace BookShop.Controllers
             }
         }
         [HttpPut("{id}")]
+        [Authorize(Roles = AppRole.Admin)]
         public async Task<IActionResult> Update(int id,[FromForm]BookModel bookModel)
         {
             try

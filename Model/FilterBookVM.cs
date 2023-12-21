@@ -10,4 +10,9 @@
         public string Month { get; set; } = string.Empty;
         public double Price { get; set; }
     }
+    public class FilterCategory
+    {
+        public IList<CategoryVM>? Categorys { get; set; }
+        public int TotalPage { get; set; }
+    }
 }
