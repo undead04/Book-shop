@@ -16,13 +16,13 @@ namespace BookShop.Controllers
         {
             this.reponsitory = reponsitory;
         }
-        [HttpGet("{id}")]
+        [HttpGet("{UserID}")]
         [Authorize]
-        public async Task<IActionResult> GetUser(string id)
+        public async Task<IActionResult> GetUser(string UserID)
         {
             try
             {
-                var user = await reponsitory.GetUser(id);
+                var user = await reponsitory.GetUser(UserID);
                 if (user == null)
                 {
                     return Ok(BaseResponse<string>.Error("Khong tim thay", 404));
@@ -34,7 +34,7 @@ namespace BookShop.Controllers
                 return BadRequest();
             }
         }
-        [HttpGet]
+        [HttpGet("All")]
         [Authorize(Roles = AppRole.Admin)]
         public async Task<IActionResult> GetAllUser(string?search,int take=25,int page=1)
         {

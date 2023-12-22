@@ -1,6 +1,9 @@
 ﻿using BookShop.Data;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace BookShop.Model.Server
 {
@@ -8,16 +11,23 @@ namespace BookShop.Model.Server
     {
         private readonly MyDBContext context;
         private UserManager<ApplicationUser> userManager;
-
-        public UserReponsitory(MyDBContext context,UserManager<ApplicationUser> userManager)
+        private readonly ClaimsPrincipal _user;
+        public UserReponsitory(MyDBContext context,UserManager<ApplicationUser> userManager,IHttpContextAccessor httpContextAccessor)
         {
             this.context = context;
             this.userManager = userManager;
+            _user = httpContextAccessor.HttpContext.User;
         }
-        public async Task<UserVM> GetUser(string UserID)
+       
+
+        
+    
+        public async Task<UserVM> GetUser(string userID)
         {
-            var user=await context.Users.SingleOrDefaultAsync(x=>x.Id==UserID);
-            if(user != null)
+           
+            var user =await userManager.FindByIdAsync(userID);
+           
+            if (user != null)
             {
                 return new UserVM
                 {

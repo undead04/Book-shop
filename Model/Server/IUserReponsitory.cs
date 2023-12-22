@@ -2,7 +2,7 @@
 {
     public interface IUserReponsitory
     {
-        Task<UserVM>GetUser(string UserID);
+        Task<UserVM>GetUser(string userID);
         Task<List<UserVM>> GetAllUser(string? search);
         Task DeleteUser(string UserID);
         Task UpdateUser(string UserID, UserModel user);

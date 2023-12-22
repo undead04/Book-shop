@@ -177,7 +177,7 @@ namespace BookShop.Model.Server
 
                 };
                 book.Quantity -= Convert.ToInt32(item.Quantity);
-                totalPrice += book.NewPrice;
+                totalPrice += book.NewPrice*item.Quantity;
                 await context.ordersDetails.AddAsync(OrderDetail);
             }
             order.Price=totalPrice;
