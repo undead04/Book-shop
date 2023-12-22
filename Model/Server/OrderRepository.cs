@@ -59,6 +59,7 @@ namespace BookShop.Model.Server
                 Status=x.status.ToString(),
                 StatusPayment=x.StatusPayment.ToString()
                 
+                
             })
             .ToList();
         }
@@ -78,6 +79,7 @@ namespace BookShop.Model.Server
                     OldPrice = x.Book.OldPrice,
                     NewPrice = x.Book.NewPrice,
                     TotalPrice = x.Quantity * x.Book.NewPrice,
+                    BookID=x.BookID
                 }).ToList()
 
             };

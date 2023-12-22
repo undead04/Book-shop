@@ -99,5 +99,32 @@ namespace BookShop.Model.Server
             comment.Create_at = DateTime.Now;
             await context.SaveChangesAsync();
         }
+        public async Task<bool> IsComment(int bookID, string userID)
+        {
+            var order =await context.orders.Where(or =>or.status==InvoiceStatus.Complete && or.UserID == userID && or.Details.Any(de => de.BookID == bookID)).ToListAsync();
+            if(order.Count() > 0)
+            {
+                var comment = await context.comments.FirstOrDefaultAsync(x => x.BookID == bookID && x.UserID == userID);
+                if (comment == null)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        public async Task<CommentVM> GetComment(int bookID, string userID)
+        {
+            var comment = await context.comments.FirstOrDefaultAsync(x => x.BookID == bookID && x.UserID == userID);
+            return new CommentVM
+            {
+                CreateAt=comment.Create_at.ToString(),
+                Comment=comment.UserComment,
+                Star=comment.Star,
+                UserID=comment.UserID,
+                UserName=comment.User.UserName,
+            };
+
+        }
+
     }
 }

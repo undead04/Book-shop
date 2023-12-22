@@ -108,5 +108,43 @@ namespace BookShop.Controllers
                 return BadRequest();
             }
         }
+        [HttpGet("isComment/{bookID}/{userID}")]
+        [Authorize]
+        public async Task<IActionResult> isComment(int bookID,string userID)
+        {
+            try
+            {
+
+
+               
+                
+                return Ok(BaseResponse<bool>.WithData(await reponsitory.IsComment(bookID, userID)));
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+        [HttpGet("{bookID}/{userID}")]
+        [Authorize]
+        public async Task<IActionResult> getComment(int bookID, string userID)
+        {
+            try
+            {
+
+
+                var validation = await reponsitory.IsvalidComment(bookID, userID);
+                if (!string.IsNullOrEmpty(validation))
+                {
+                    return Ok(BaseResponse<string>.Error(validation, 400));
+                }
+               
+                return Ok(BaseResponse<CommentVM>.WithData(await reponsitory.GetComment(bookID, userID)));
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
     }
 }

@@ -12,6 +12,7 @@ namespace BookShop.Model
         public double NewPrice { get; set; }
         public int Quantity { get; set; }
         public double TotalPrice { get; set; }
+        public int BookID { get;set; }
        
 
     }
