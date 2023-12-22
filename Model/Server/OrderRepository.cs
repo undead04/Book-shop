@@ -85,6 +85,7 @@ namespace BookShop.Model.Server
         public async Task<List<OrderModel>> OrderDetailUser(InvoiceStatus? status, string UserID)
         {
             var order = await context.orders.AsQueryable().ToListAsync();
+            order=order.Where(order=>order.UserID == UserID).ToList();
             if(status.HasValue)
             {
                 order =order.Where(x => x.UserID == UserID && x.status == status).ToList();
