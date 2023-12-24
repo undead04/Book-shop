@@ -36,7 +36,7 @@ namespace BookShop.Model.Server
                     Phone = user.PhoneNumber,
                     Email = user.Email,
                     ID = user.Id,
-                    Password = user.PasswordHash,
+                    Address=user.Address,
                     About = user.About,
                     Create_at = user.Create_at.ToString()
                     
@@ -60,7 +60,7 @@ namespace BookShop.Model.Server
                 Phone = user.PhoneNumber,
                 Email = user.Email,
                 ID=user.Id,
-                Password = user.PasswordHash,
+                Address=user.Address,
                 About = user.About,
                 Create_at = user.Create_at.ToString()
 
