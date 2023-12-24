@@ -55,7 +55,7 @@ namespace BookShop.Controllers
             }
         }
         [HttpDelete("{id}")]
-        [Authorize(Roles = AppRole.Admin)]
+        [Authorize]
         public async Task<IActionResult> DeleteUser(string id)
         {
             try
@@ -77,7 +77,7 @@ namespace BookShop.Controllers
             }
         }
         [HttpPut("{id}")]
-        [Authorize(Roles = AppRole.Admin)]
+        [Authorize]
         public async Task<IActionResult> UpdateUser(string id,[FromForm]UserModel user)
         {
             try
