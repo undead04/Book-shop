@@ -2,8 +2,14 @@ import React, { useEffect, useState } from "react";
 import Heading from "../Heading";
 import ProductCardMin from "./ProductCardMin";
 import FancyButton from "../FancyButton";
+import { useNavigate, useParams } from "react-router-dom";
+import axiosClient from "../../axios-client";
 
-const ProductGroup = ({ id }) => {
+const ProductGroup = ({ headingName, books }) => {
+	const navigator = useNavigate();
+	const [booksList, setBooksList] = useState();
+	const [category, setCategory] = useState([]);
+	useEffect(() => {}, []);
 	const [grpProduct, setGrpProduct] = useState({
 		name: "Hot sales",
 		products: [
@@ -42,19 +48,21 @@ const ProductGroup = ({ id }) => {
 		// get the name and the product into it;
 	}, []);
 	return (
-		<div>
-			<Heading title={grpProduct.name} />
-			<div className="flex justify-end">
-				<div className="">
-					<FancyButton to={"#"} title={"View more"} />
+		<>
+			<div>
+				<Heading title={headingName} />
+				<div className="flex justify-end">
+					<div className="">
+						<FancyButton to={`/books/type/`} title={"View more"} />
+					</div>
+				</div>
+				<div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 py-4 gap-4">
+					{books.map((p, i) => (
+						<ProductCardMin items={p} key={p.id} />
+					))}
 				</div>
 			</div>
-			<div className="grid grid-cols-4 py-4 gap-4">
-				{grpProduct.products.map((p, i) => (
-					<ProductCardMin items={p} key={i} />
-				))}
-			</div>
-		</div>
+		</>
 	);
 };
 

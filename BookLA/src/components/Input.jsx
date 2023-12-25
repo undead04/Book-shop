@@ -10,13 +10,26 @@ const Input = forwardRef(
 				<label className="block text-sm text-gray-500 dark:text-gray-300">
 					{title}
 				</label>
-				<input
-					type={type}
-					className="block mt-2 w-full placeholder-gray-400/70 bg-white px-3 py-2 border "
-					{...props}
-					ref={ref}
-					onChange={onchange}
-				/>
+				{type === "textarea" ? (
+					<>
+						<textarea
+							className="block mt-2 w-full placeholder-gray-400/70 bg-white px-3 py-2 border"
+							ref={ref}
+							{...props}
+							cols="30"
+							rows="10"
+							onChange={onchange}
+						></textarea>
+					</>
+				) : (
+					<input
+						type={type}
+						className="block mt-2 w-full placeholder-gray-400/70 bg-white px-3 py-2 border "
+						{...props}
+						ref={ref}
+						onChange={onchange}
+					/>
+				)}
 				<p
 					className={`mt-1 text-end text-xs text-red-400  ${
 						!error && "hidden"

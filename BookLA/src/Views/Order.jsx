@@ -1,187 +1,495 @@
+import { Tab } from "@headlessui/react";
 import React, { useEffect, useState } from "react";
+import axiosClient from "../axios-client";
 import { Link } from "react-router-dom";
-const fakeApi = [{}];
-const api = "/api/order/userId/status";
+import { useStateContext } from "../Contexts/ContextProvider";
+import Button from "../components/Button";
+import OrderDetail from "../components/OrderDetail";
 const Order = () => {
-	// const [, set] = useState();
-	const list = [
-		{
-			title: "All",
-			isActive: true,
-			api: "",
-			status: 1,
-		},
-		{
-			title: "pending_payment",
-			isActive: false,
-			api: "",
-			status: 2,
-		},
-		{
-			title: "pending",
-			isActive: false,
-			api: "",
-			status: 3,
-		},
-		{
-			title: "processing",
-			isActive: false,
-			api: "",
-			status: 4,
-		},
-		{
-			title: "complete",
-			isActive: false,
-			api: "",
-			status: 5,
-		},
-		{
-			title: "cancel",
-			isActive: false,
-			api: "",
-			status: 6,
-		},
-	];
-
-	const [arrayList, setArrayList] = useState(list);
-	const [acTive, setAcTive] = useState(arrayList[0]);
-	const onClick = (status) => {
-		console.log(status);
-		if (acTive.status == status) {
-			console.log("Duplicate");
-			return;
-		}
-		// console.log();
-		setAcTive(arrayList.find((a) => a.status == status));
-		console.log("Change");
+	const [orders, setOrders] = useState([]);
+	const [waitConfirmationOrders, setWaitConfirmationOrders] =
+		useState([]);
+	const [waitDelivery, setWaitDelivery] = useState([]);
+	const [completeOrders, setCompleteOrders] = useState([]);
+	const [cancelledOrders, setCancelledOrders] = useState([]);
+	const [page, setPage] = useState([]);
+	const [currentPage, setCurrentPage] = useState(1);
+	const [currentTab, setcurrentTab] = useState(-2);
+	const ORDER_TAKE = 7;
+	const { userId } = useStateContext();
+	const [orderDetailId, setOrderDetailId] = useState(-1);
+	const [detailOpen, setDetailOpen] = useState(false);
+	const handlePageChange = (e) => {
+		console.log(e.target.value);
+		setCurrentPage(e.target.value);
 	};
 
-	const OrderOptions = [
-		{
-			title: "Mặc định",
-			isActive: true,
-			status: 0,
-		},
-		{
-			title: "Từ A - Z",
-			isActive: false,
-			status: 1,
-		},
-		{
-			title: "Từ Z -A",
-			isActive: false,
-			status: -1,
-		},
-	];
-	const [order, setOrder] = useState(OrderOptions);
-
-	const handleOrder = (e) => {
-		const selectedStatus = e.target.selectedOptions[0].value;
-		const options = [...order];
-		options.forEach((o, i) => {
-			o.isActive = o.status == selectedStatus;
-		});
-		console.log(options);
-		setOrder(options);
-	};
 	useEffect(() => {
-		console.log("Call api status: ", acTive.status);
-		//handle Order
-		//handle Date
-	}, [acTive]);
+		if (currentTab == -2) {
+			fetchAllOrder();
+		}
+
+		if (currentTab == 0) {
+			fetchWaitOrders();
+		}
+
+		if (currentTab == 1) {
+			fetchWaitDelivery();
+		}
+
+		if (currentTab == 3) {
+			fetchCompleteOrders();
+		}
+
+		if (currentTab == -1) {
+			fetchCancelOrders();
+		}
+	}, [currentPage, currentTab]);
+
+	const fetchAllOrder = async () => {
+		await axiosClient
+			.get(
+				`${
+					import.meta.env.VITE_API_BASE_URL
+				}/api/Order/User/${userId}?page=${currentPage}&take=${ORDER_TAKE}`,
+			)
+			.then((res) => {
+				console.log(res);
+				setPage(
+					Array.from(
+						{ length: res.data.totalPage },
+						(_, index) => index + 1,
+					),
+				);
+				setOrders(res.data.order);
+			});
+	};
+	const fetchWaitOrders = async () => {
+		await axiosClient
+			.get(
+				`${
+					import.meta.env.VITE_API_BASE_URL
+				}/api/Order/User/${userId}?status=0`,
+			)
+			.then((res) => {
+				setWaitConfirmationOrders(res.data.order);
+				setPage(
+					Array.from(
+						{ length: res.data.totalPage },
+						(_, index) => index + 1,
+					),
+				);
+			});
+	};
+	const fetchWaitDelivery = async () => {
+		axiosClient
+			.get(
+				`${
+					import.meta.env.VITE_API_BASE_URL
+				}/api/Order/User/${userId}?status=1`,
+			)
+			.then((res) => {
+				setWaitDelivery(res.data.order);
+				setPage(
+					Array.from(
+						{ length: res.data.totalPage },
+						(_, index) => index + 1,
+					),
+				);
+			});
+	};
+
+	const fetchCompleteOrders = async () => {
+		await axiosClient
+			.get(
+				`${
+					import.meta.env.VITE_API_BASE_URL
+				}/api/Order/User/${userId}?status=3`,
+			)
+			.then((res) => {
+				setCompleteOrders(res.data.order);
+				setPage(
+					Array.from(
+						{ length: res.data.totalPage },
+						(_, index) => index + 1,
+					),
+				);
+			});
+	};
+
+	const fetchCancelOrders = async () => {
+		await axiosClient
+			.get(
+				`${
+					import.meta.env.VITE_API_BASE_URL
+				}/api/Order/User/${userId}?status=-1`,
+			)
+			.then((res) => {
+				setCancelledOrders(res.data.order);
+				setPage(
+					Array.from(
+						{ length: res.data.totalPage },
+						(_, index) => index + 1,
+					),
+				);
+			});
+	};
+
+	const handleCancel = (e, orderID) => {
+		e.preventDefault();
+		axiosClient
+			.get(
+				`${import.meta.env.VITE_API_BASE_URL}
+/api/Order/cancelOrder/${orderID}`,
+			)
+			.then((res) => {
+				fetchWaitOrders();
+			});
+	};
+
+	const handleSeeOrderDetail = (e, orderID) => {
+		e.preventDefault();
+		setOrderDetailId(orderID);
+		setDetailOpen(true);
+	};
 	return (
-		<div className="w-full">
-			<div className="py-2">
-				<div className="w-fit ml-auto mb-4">
-					<label htmlFor="order">Sắp xếp theo:</label>
+		<div className="p-4">
+			<div className="panel dark:bg-black bg-white dark:text-white text-black">
+				<div className="flex items-center justify-end w-fit gap-2 ml-auto">
+					<span className="text-xl">Số trang</span>
 					<select
-						className="bg-white min-w-[80px] px-3 py-2 border mx-2"
-						name=""
-						id="order"
-						onChange={handleOrder}
+						className="button border my-3 dark:text-white text-black dark:bg-black bg-white"
+						onChange={handlePageChange}
 					>
-						{order.map((o, i) => (
-							<option key={i} value={o.status}>
-								{o.title}
+						{page.map((p) => (
+							<option className="" value={p} key={p}>
+								{p}
 							</option>
 						))}
 					</select>
 				</div>
-			</div>
-			<div className="whitespace-nowrap overflow-scroll">
-				{arrayList.map((l, i) => (
-					<div
-						className={`
-									${acTive.status == l.status && "border-b-2 border-gray-500"} 
-									${i !== arrayList.length - 1 && "border-r"}
-									inline-block
-									cursor-pointer
-									w-[240px] py-4 bg-white text-center flex-1
-									`}
-						key={i}
-						onClick={() => onClick(l.status)}
-					>
-						<h5 className="text-2xl font-bold select-none capitalize px-4">
-							{l.title}
-						</h5>
-					</div>
-				))}
-			</div>
-			<div className="my-4">
-				<table className="min-w-full leading-normal">
-					<thead>
-						<tr>
-							<th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-								Order ID
-							</th>
-							<th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-								Product
-							</th>
-							<th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-								Created at
-							</th>
-							<th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-								Status
-							</th>
-							<th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-								View more
-							</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td className="px-5 py-5 bg-white text-sm">
-								100032323
-							</td>
-							<td className="px-5 py-5 bg-white text-sm">
-								<p className="text-gray-900 whitespace-no-wrap"></p>
-							</td>
-							<td className="px-5 py-5 bg-white text-sm">
-								<p className="text-gray-900 whitespace-no-wrap">
-									Jan 18, 2020
-								</p>
-							</td>
-							<td className="px-5 py-5 bg-white text-sm">
-								<span className="relative inline-block px-3 py-1 font-semibold text-red-900 leading-tight">
-									<span
-										aria-hidden
-										className="absolute inset-0 bg-red-200 opacity-50 rounded-full"
+				<Tab.Group>
+					<Tab.List className={"w-full flex justify-around"}>
+						<Tab
+							className={`${
+								currentTab == -2 ? "dark:bg-gray-700 bg-gray-300" : ""
+							} button border-t-4 dark:border-blue-700 border-blue-500 w-full rounded-none py-2`}
+							onClick={() => setcurrentTab(-2)}
+						>
+							All
+						</Tab>
+						<Tab
+							className={`${
+								currentTab == 0 ? "dark:bg-gray-700 bg-gray-300" : ""
+							} button border-t-4 dark:border-blue-700 border-blue-500 w-full rounded-none py-2`}
+							onClick={() => setcurrentTab(0)}
+						>
+							Waiting Confimation
+						</Tab>
+						<Tab
+							className={`${
+								currentTab == 1 ? "dark:bg-gray-700 bg-gray-300" : ""
+							} button border-t-4 dark:border-blue-700 border-blue-500 w-full rounded-none py-2`}
+							onClick={() => setcurrentTab(1)}
+						>
+							Waiting Delivery
+						</Tab>
+						<Tab
+							className={`${
+								currentTab == 3 ? "dark:bg-gray-700 bg-gray-300" : ""
+							} button border-t-4 dark:border-blue-700 border-blue-500 w-full rounded-none py-2`}
+							onClick={() => setcurrentTab(3)}
+						>
+							Complete
+						</Tab>
+						<Tab
+							className={`${
+								currentTab == -1 ? "dark:bg-gray-700 bg-gray-300" : ""
+							} button border-t-4 dark:border-blue-700 border-blue-500 w-full rounded-none py-2`}
+							onClick={() => setcurrentTab(-1)}
+						>
+							Cancel
+						</Tab>
+					</Tab.List>
+					<Tab.Panels className={"p-2 panel my-2 dark:bg-gray-800"}>
+						<Tab.Panel>
+							<table className="w-full text-center">
+								<thead>
+									<tr className="border-b-2">
+										<td>ID</td>
+										<td>Price</td>
+										<td>Order date</td>
+										<td>Status</td>
+										<td>...</td>
+									</tr>
+								</thead>
+								<tbody>
+									{orders.length > 0 ? (
+										<>
+											{orders.map((i) => (
+												<tr
+													className=" border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 h-[80px] dark:text-white text-dark"
+													key={i.orderID}
+												>
+													<td>{i.orderID}</td>
+													<td>{i.price}</td>
+													<td>{i.orderDate}</td>
+													<td>{i.status}</td>
+													<td>
+														<Button
+															text={"..."}
+															classNames={"button"}
+															onClick={(e) =>
+																handleSeeOrderDetail(e, i.orderID)
+															}
+														/>
+													</td>
+												</tr>
+											))}
+										</>
+									) : (
+										<>
+											<tr className="border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 h-[80px] dark:text-white text-dark">
+												<td colSpan={5}>Không có dữ liệu</td>
+											</tr>
+										</>
+									)}
+								</tbody>
+							</table>
+						</Tab.Panel>
+						<Tab.Panel>
+							<table className="w-full text-center">
+								<thead>
+									<tr className="border-b-2">
+										<td>ID</td>
+										<td>Price</td>
+										<td>Order date</td>
+										<td>Status</td>
+										<td>Cancel</td>
+										<td>...</td>
+									</tr>
+								</thead>
+								<tbody>
+									{waitConfirmationOrders.length > 0 ? (
+										<>
+											{waitConfirmationOrders.map((i) => (
+												<tr
+													className=" border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 h-[80px] dark:text-white text-dark"
+													key={i.orderID}
+												>
+													<td>{i.orderID}</td>
+													<td>{i.price}</td>
+													<td>{i.orderDate}</td>
+													<td>{i.status}</td>
+													<td>
+														<Button
+															text={"Cancel"}
+															onClick={(e) =>
+																handleCancel(e, i.orderID)
+															}
+															classNames={
+																"button bg-red-700 hover:bg-red-900 text-white"
+															}
+														/>
+													</td>
+													<td>
+														<Button
+															text={"..."}
+															classNames={"button"}
+															onClick={(e) =>
+																handleSeeOrderDetail(e, i.orderID)
+															}
+														/>
+													</td>
+												</tr>
+											))}
+										</>
+									) : (
+										<>
+											<tr className="border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 h-[80px] dark:text-white text-dark">
+												<td colSpan={6}>Không có dữ liệu</td>
+											</tr>
+										</>
+									)}
+								</tbody>
+							</table>
+							{/* {waitConfirmationOrders.map((i) => (
+								<div key={i.orderID}>
+									<div>{i.orderID}</div>
+									<button
+										onClick={(e) => handleConfirm(e, i.orderID)}
 									>
-										<span className="relative">Inactive</span>
-									</span>
-								</span>
-							</td>
-							<td className="px-5 py-5 bg-white text-sm text-center">
-								<Link
-									to={"/order/id"}
-									className="relative text-red-500 bold"
-								>
-									...
-								</Link>
-							</td>
-						</tr>
-					</tbody>
-				</table>
+										Comfirm
+									</button>
+								</div>
+							))} */}
+						</Tab.Panel>
+						<Tab.Panel>
+							<table className="w-full text-center">
+								<thead>
+									<tr className="border-b-2">
+										<td>ID</td>
+										<td>Price</td>
+										<td>Order date</td>
+										<td>Status</td>
+										<td>...</td>
+									</tr>
+								</thead>
+								<tbody>
+									{waitDelivery.length > 0 ? (
+										<>
+											{waitDelivery.map((i) => (
+												<tr
+													className=" border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 h-[80px] dark:text-white text-dark"
+													key={i.orderID}
+												>
+													<td>{i.orderID}</td>
+													<td>{i.price}</td>
+													<td>{i.orderDate}</td>
+													<td>{i.status}</td>
+
+													<td>
+														<Button
+															text={"..."}
+															classNames={"button"}
+															onClick={(e) =>
+																handleSeeOrderDetail(e, i.orderID)
+															}
+														/>
+													</td>
+												</tr>
+											))}
+										</>
+									) : (
+										<>
+											<tr className="border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 h-[80px] dark:text-white text-dark">
+												<td colSpan={6}>Không có dữ liệu</td>
+											</tr>
+										</>
+									)}
+								</tbody>
+							</table>
+							{/* {waitDelivery.map((i) => (
+								<div key={i.orderID}>{i.orderID}</div>
+							))} */}
+						</Tab.Panel>
+						<Tab.Panel>
+							{/* {completeOrders.map((i) => (
+								<div key={i.orderID}>{i.orderID}</div>
+							))} */}
+							<table className="w-full text-center">
+								<thead>
+									<tr className="border-b-2">
+										<td>ID</td>
+										<td>Price</td>
+										<td>Order date</td>
+										<td>Receive date</td>
+										<td>Status</td>
+										<td>...</td>
+									</tr>
+								</thead>
+								<tbody>
+									{completeOrders.length > 0 ? (
+										<>
+											{completeOrders.map((i) => (
+												<tr
+													className=" border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 h-[80px] dark:text-white text-dark"
+													key={i.orderID}
+												>
+													<td>{i.orderID}</td>
+													<td>{i.price}</td>
+													<td>{i.orderDate}</td>
+													<td>{i.dateOfReceiptOfGoods}</td>
+													<td className="text-green-500 font-bold">
+														{i.status}
+													</td>
+													<td>
+														<Button
+															text={"..."}
+															classNames={"button"}
+															onClick={(e) =>
+																handleSeeOrderDetail(e, i.orderID)
+															}
+														/>
+													</td>
+												</tr>
+											))}
+										</>
+									) : (
+										<>
+											<tr className="border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 h-[80px] dark:text-white text-dark">
+												<td colSpan={6}>Không có dữ liệu</td>
+											</tr>
+										</>
+									)}
+								</tbody>
+							</table>
+						</Tab.Panel>
+						<Tab.Panel>
+							<table className="w-full text-center">
+								<thead>
+									<tr className="border-b-2">
+										<td>ID</td>
+										<td>Price</td>
+										<td>Order date</td>
+										<td>Status</td>
+										<td>...</td>
+									</tr>
+								</thead>
+								<tbody>
+									{cancelledOrders.length > 0 ? (
+										<>
+											{cancelledOrders.map((i) => (
+												<tr
+													className=" border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 h-[80px] dark:text-white text-dark"
+													key={i.orderID}
+												>
+													<td>{i.orderID}</td>
+													<td>{i.price}</td>
+													<td>{i.orderDate}</td>
+													<td className="text-red-600 font-bold">
+														{i.status}
+													</td>
+													<td>
+														<Button
+															text={"..."}
+															classNames={"button"}
+															onClick={(e) =>
+																handleSeeOrderDetail(e, i.orderID)
+															}
+														/>
+													</td>
+												</tr>
+											))}
+										</>
+									) : (
+										<>
+											<tr className="border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 h-[80px] dark:text-white text-dark">
+												<td colSpan={5}>Không có dữ liệu</td>
+											</tr>
+										</>
+									)}
+								</tbody>
+							</table>
+						</Tab.Panel>
+					</Tab.Panels>
+				</Tab.Group>
+
+				<>
+					{detailOpen ? (
+						<div
+							className="fixed inset-0 flex items-center justify-center"
+							style={{ backgroundColor: "rgba(0, 0, 0, 0.7)" }}
+						>
+							<OrderDetail
+								orderId={orderDetailId}
+								controlOpen={[detailOpen, setDetailOpen]}
+							/>
+						</div>
+					) : (
+						""
+					)}
+				</>
 			</div>
 		</div>
 	);

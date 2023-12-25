@@ -3,120 +3,16 @@ import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import useDebounce from "../hooks/useDebounce";
-const booksList = [
-	{
-		id: "1",
-		description:
-			"Miles Morales catapults across the Multiverse, where he encounters a team of Spider-People charged with protecting its very existence. When the heroes clash on how to handle a new threat,",
-		image:
-			"https://m.media-amazon.com/images/M/MV5BMzI0NmVkMjEtYmY4MS00ZDMxLTlkZmEtMzU4MDQxYTMzMjU2XkEyXkFqcGdeQXVyMzQ0MzA0NTM@._V1_QL75_UX380_CR0,1,380,562_.jpg",
-		rating: "2",
-		name: "Spider-Man: Across the Spider-Verse",
-		release: "2023",
-	},
+import axiosClient from "../axios-client";
 
-	{
-		id: "3",
-		description:
-			"Miles Morales catapults across the Multiverse, where he encounters a team of Spider-People charged with protecting its very existence. When the heroes clash on how to handle a new threat,",
-		image:
-			"https://m.media-amazon.com/images/M/MV5BMzI0NmVkMjEtYmY4MS00ZDMxLTlkZmEtMzU4MDQxYTMzMjU2XkEyXkFqcGdeQXVyMzQ0MzA0NTM@._V1_QL75_UX380_CR0,1,380,562_.jpg",
-		rating: "5",
-		name: "Spider-Man: Across the Spider-Verse",
-		release: "2023",
-	},
-	{
-		id: "4",
-		description:
-			"Miles Morales catapults across the Multiverse, where he encounters a team of Spider-People charged with protecting its very existence. When the heroes clash on how to handle a new threat,",
-		image:
-			"https://m.media-amazon.com/images/M/MV5BMzI0NmVkMjEtYmY4MS00ZDMxLTlkZmEtMzU4MDQxYTMzMjU2XkEyXkFqcGdeQXVyMzQ0MzA0NTM@._V1_QL75_UX380_CR0,1,380,562_.jpg",
-		rating: "8.8",
-		name: "Spider-Man: Across the Spider-Verse",
-		release: "2023",
-	},
-	{
-		id: "5",
-		description:
-			"Miles Morales catapults across the Multiverse, where he encounters a team of Spider-People charged with protecting its very existence. When the heroes clash on how to handle a new threat,",
-		image:
-			"https://m.media-amazon.com/images/M/MV5BMzI0NmVkMjEtYmY4MS00ZDMxLTlkZmEtMzU4MDQxYTMzMjU2XkEyXkFqcGdeQXVyMzQ0MzA0NTM@._V1_QL75_UX380_CR0,1,380,562_.jpg",
-		rating: "8.8",
-		name: "Spider-Man: Across the Spider-Verse",
-		release: "2023",
-	},
-	{
-		id: "6",
-		description:
-			"Miles Morales catapults across the Multiverse, where he encounters a team of Spider-People charged with protecting its very existence. When the heroes clash on how to handle a new threat,",
-		image:
-			"https://m.media-amazon.com/images/M/MV5BMzI0NmVkMjEtYmY4MS00ZDMxLTlkZmEtMzU4MDQxYTMzMjU2XkEyXkFqcGdeQXVyMzQ0MzA0NTM@._V1_QL75_UX380_CR0,1,380,562_.jpg",
-		rating: "8.8",
-		name: "Spider-Man: Across the Spider-Verse",
-		release: "2023",
-	},
-	{
-		id: "7",
-		description:
-			"Miles Morales catapults across the Multiverse, where he encounters a team of Spider-People charged with protecting its very existence. When the heroes clash on how to handle a new threat,",
-		image:
-			"https://m.media-amazon.com/images/M/MV5BMzI0NmVkMjEtYmY4MS00ZDMxLTlkZmEtMzU4MDQxYTMzMjU2XkEyXkFqcGdeQXVyMzQ0MzA0NTM@._V1_QL75_UX380_CR0,1,380,562_.jpg",
-		rating: "8.8",
-		name: "Spider-Man: Across the Spider-Verse",
-		release: "2023",
-	},
-	{
-		id: "8",
-		description:
-			"Miles Morales catapults across the Multiverse, where he encounters a team of Spider-People charged with protecting its very existence. When the heroes clash on how to handle a new threat,",
-		image:
-			"https://m.media-amazon.com/images/M/MV5BMzI0NmVkMjEtYmY4MS00ZDMxLTlkZmEtMzU4MDQxYTMzMjU2XkEyXkFqcGdeQXVyMzQ0MzA0NTM@._V1_QL75_UX380_CR0,1,380,562_.jpg",
-		rating: "8.8",
-		name: "Spider-Man: Across the Spider-Verse",
-		release: "2023",
-	},
-	{
-		id: "9",
-		description:
-			"Miles Morales catapults across the Multiverse, where he encounters a team of Spider-People charged with protecting its very existence. When the heroes clash on how to handle a new threat,",
-		image:
-			"https://m.media-amazon.com/images/M/MV5BMzI0NmVkMjEtYmY4MS00ZDMxLTlkZmEtMzU4MDQxYTMzMjU2XkEyXkFqcGdeQXVyMzQ0MzA0NTM@._V1_QL75_UX380_CR0,1,380,562_.jpg",
-		rating: "8.8",
-		name: "Spider-Man: Across the Spider-Verse",
-		release: "2023",
-	},
-	{
-		id: "10",
-		description:
-			"Miles Morales catapults across the Multiverse, where he encounters a team of Spider-People charged with protecting its very existence. When the heroes clash on how to handle a new threat,",
-		image:
-			"https://m.media-amazon.com/images/M/MV5BMzI0NmVkMjEtYmY4MS00ZDMxLTlkZmEtMzU4MDQxYTMzMjU2XkEyXkFqcGdeQXVyMzQ0MzA0NTM@._V1_QL75_UX380_CR0,1,380,562_.jpg",
-		rating: "8.8",
-		name: "Spider-Man: Across the Spider-Verse",
-		release: "2023",
-	},
-	{
-		id: "11",
-		description:
-			"Miles Morales catapults across the Multiverse, where he encounters a team of Spider-People charged with protecting its very existence. When the heroes clash on how to handle a new threat,",
-		image:
-			"https://m.media-amazon.com/images/M/MV5BMzI0NmVkMjEtYmY4MS00ZDMxLTlkZmEtMzU4MDQxYTMzMjU2XkEyXkFqcGdeQXVyMzQ0MzA0NTM@._V1_QL75_UX380_CR0,1,380,562_.jpg",
-		rating: "8.8",
-		name: "Spider-Man: Across the Spider-Verse",
-		release: "2023",
-	},
-	{
-		id: "12",
-		description:
-			"Miles Morales catapults across the Multiverse, where he encounters a team of Spider-People charged with protecting its very existence. When the heroes clash on how to handle a new threat,",
-		image:
-			"https://m.media-amazon.com/images/M/MV5BMzI0NmVkMjEtYmY4MS00ZDMxLTlkZmEtMzU4MDQxYTMzMjU2XkEyXkFqcGdeQXVyMzQ0MzA0NTM@._V1_QL75_UX380_CR0,1,380,562_.jpg",
-		rating: "8.8",
-		name: "Spider-Man: Across the Spider-Verse",
-		release: "2023",
-	},
-];
-const Search = ({ showResult = true, passData, ...props }) => {
+const Search = ({
+	showResult = true,
+	passData,
+	setLoading,
+	prevValue,
+	selectedTypes = [],
+	...props
+}) => {
 	const initialValue = [
 		{
 			name: "Iphone 7 Pro",
@@ -130,32 +26,41 @@ const Search = ({ showResult = true, passData, ...props }) => {
 		},
 	];
 	const searchRef = useRef();
-	const [searchResult, setSearchResult] = useState(initialValue);
-	const [value, setValue] = useState("");
+	const [searchResult, setSearchResult] = useState([]);
+	const [value, setValue] = useState(prevValue || "");
 	const [open, setOpen] = useState(false);
 	const debounceValue = useDebounce(value, 400);
 	useEffect(() => {
-		//Call api
+		fetchData();
+	}, [open, debounceValue]);
 
-		console.log(value);
-		if (passData) {
-			passData(booksList);
+	const fetchData = () => {
+		if ((open && !!value) || value == "" || prevValue) {
+			axiosClient
+				.get(
+					`/Filter?search=${debounceValue}&take=${passData ? 25 : 5}`,
+				)
+				.then((res) => {
+					setLoading ? setLoading(true) : "";
+					if (passData) {
+						passData(res.data.book);
+					}
+					setSearchResult(res.data.book);
+					setLoading ? setLoading(false) : "";
+				});
 		}
 		setSearchResult(searchResult);
-	}, [open, debounceValue]);
+	};
+
+	const handleClose = () => {
+		setTimeout(() => {
+			setOpen(false);
+		}, 300);
+	};
 	return (
 		<>
-			{/* <div className="lg:hidden block ml-4 p-4">
-				<Popover>
-					<Popover.Button>
-						<MagnifyingGlassIcon className="w-8 h-8" />
-					</Popover.Button>
-
-					<Popover.Panel></Popover.Panel>
-				</Popover>
-			</div> */}
 			<div className="lg:min-w-[400px] block mx-4 relative">
-				<div className="flex rounded-full bg-primary px-2 w-full max-w-auto ring-frost ring-1">
+				<div className="flex rounded-full bg-primary px-2 w-full max-w-auto ring-frost ring-1 dark:ring-gray-500">
 					<button className="self-center flex p-1 cursor-pointer bg-primary">
 						{" "}
 						<svg
@@ -201,15 +106,19 @@ const Search = ({ showResult = true, passData, ...props }) => {
 					<input
 						spellCheck={false}
 						ref={searchRef}
-						onChange={(e) => setValue(e.target.value)}
+						onChange={(e) => {
+							console.log(e.target.value);
+							setValue(e.target.value);
+						}}
 						value={value}
 						type="text"
 						className={`w-full bg-primary
+						dark:text-white
 						 flex bg-transparent pl-2 text-secondary
 						 outline-0 `}
 						{...props}
 						onFocus={() => setOpen(true)}
-						onBlur={() => setOpen(false)}
+						onBlur={handleClose}
 					/>
 					<button
 						type="submit"
@@ -250,16 +159,22 @@ const Search = ({ showResult = true, passData, ...props }) => {
 						leaveFrom="opacity-100"
 						leaveTo="opacity-0"
 					>
-						<div className="absolute inset-x-0 top-full h-auto rounded-b-xl bg-white bg-clip-border text-gray-700 shadow-md pt-2 mt-2 z-10">
+						<div className="absolute inset-x-0 top-full h-auto rounded-b-xl bg-white dark:bg-gray-800 dark:text-gray-200 bg-clip-border text-gray-700 shadow-md pt-2 mt-2 z-10">
 							<div className="px-4">
 								{searchResult.map((s, i) => (
-									<div key={i} className="w-full py-2">
+									<Link
+										to={`/book/${s.id}`}
+										key={i}
+										className="w-full py-2 block my-2"
+									>
 										<div className="flex">
 											<div className="flex items-center">
-												<div className="w-[100px]">
+												<div className="w-[50px] object-cover flex justify-center border border-gray-500">
 													<img
 														className="w-auto h-[40px]"
-														src={s.image}
+														src={`${
+															import.meta.env.VITE_API_BASE_URL
+														}/api/Image/${s.image}`}
 														alt=""
 													/>
 												</div>
@@ -267,15 +182,24 @@ const Search = ({ showResult = true, passData, ...props }) => {
 											</div>
 											<div>{/* Icons */}</div>
 										</div>
-									</div>
+									</Link>
 								))}
 
 								<div>
 									<div>
-										<div className="flex justify-end space-x-4 border-t border-gray-100 px-5 py-4 text-md font-bold">
-											<Link to={"#"} className="text-blue-600">
-												See more
-											</Link>
+										<div className="flex justify-end space-x-4 border-t border-gray-700 dark:border-gray-100 px-5 py-4 text-md font-bold">
+											{searchRef.current && (
+												<Link
+													to={`/book/all/${
+														searchRef.current.value
+															? searchRef.current.value
+															: ""
+													}`}
+													className="text-blue-600 dark:text-blue-400"
+												>
+													See more
+												</Link>
+											)}
 										</div>
 									</div>
 								</div>

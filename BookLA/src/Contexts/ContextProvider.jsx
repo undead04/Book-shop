@@ -2,13 +2,19 @@ import { createContext, useContext, useState } from "react";
 
 const StateContext = createContext({
 	currentUser: null,
+	user: null,
 	token: null,
+	userId: null,
 	setUser: () => {},
+	setUserId: () => {},
 	setToken: () => {},
 });
 
 export const ContextProvider = ({ children }) => {
 	const [user, setUser] = useState({});
+	const [userId, _setUserId] = useState(
+		localStorage.getItem("USER_ID"),
+	);
 	const [token, _setToken] = useState(
 		localStorage.getItem("ACCESS_TOKEN"),
 	);
@@ -22,12 +28,23 @@ export const ContextProvider = ({ children }) => {
 		}
 	};
 
+	const setUserId = (id) => {
+		_setUserId(id);
+		if (id) {
+			localStorage.setItem("USER_ID", id);
+		} else {
+			localStorage.removeItem("USER_ID");
+		}
+	};
+
 	return (
 		<StateContext.Provider
 			value={{
+				userId,
 				user,
 				token,
 				setUser,
+				setUserId,
 				setToken,
 			}}
 		>

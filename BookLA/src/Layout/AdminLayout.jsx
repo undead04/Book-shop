@@ -1,7 +1,21 @@
-import React from "react";
+import React, { useEffect } from "react";
+import AdminNavbar from "./Component/AdminNavbar";
+import AdminSidebar from "./Component/AdminSidebar";
+import { Outlet } from "react-router-dom";
 
 const AdminLayout = () => {
-	return <div></div>;
+	useEffect(() => {
+		//check admin
+	}, []);
+	return (
+		<>
+			<AdminNavbar />
+
+			<AdminSidebar />
+
+			<Outlet />
+		</>
+	);
 };
 
 export default AdminLayout;

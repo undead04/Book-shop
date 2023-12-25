@@ -12,12 +12,13 @@ axiosClient.interceptors.request.use((config) => {
 
 axiosClient.interceptors.response.use(
 	(response) => {
-		return response;
+		return response.data;
 	},
 	(error) => {
 		const { response } = error;
 		if (response.status === 401) {
 			localStorage.removeItem("ACCESS_TOKEN");
+			localStorage.removeItem("USER_ID");
 		} else if (response.status === 404) {
 			// Not found
 		}

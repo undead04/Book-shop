@@ -153,59 +153,13 @@ export const bookTypesData = [
 
 export const userSettingsMenu = [
 	{
+		title: "Khám phá",
+		url: "/book/all",
+		separate: false,
+	},
+	{
 		title: "Xem hồ sơ",
 		url: "/user",
 		icons: "fa fa-user",
-	},
-	{
-		title: "Yêu thích",
-		url: "/user",
-		icons: "fa fa-user",
-	},
-	{
-		title: "Nhận Xu",
-		url: "/user",
-		icons: "fa fa-user",
-	},
-	{
-		title: "Xem phân tích",
-		url: "/user",
-		icons: "fa fa-user",
-	},
-	{
-		title: "Trung tâm Nhà sáng tạo LIVE",
-		url: "/user",
-		icons: "fa fa-user",
-	},
-	{
-		title: "Cài đặt",
-		url: "/user",
-		icons: "fa fa-user",
-	},
-	{
-		title: "Tiếng Việt",
-		url: "/user",
-		icons: "fa fa-user",
-	},
-	{
-		title: "Phản hồi và trợ giúp",
-		url: "/user",
-		icons: "fa fa-user",
-	},
-	{
-		title: "Phím tắt trên bàn phím",
-		url: "/user",
-		icons: "fa fa-user",
-	},
-	{
-		title: "Chế độ tối",
-		url: "/user",
-		icons: "fa fa-user",
-	},
-	{
-		title: "Đăng xuất",
-		url: "/user",
-		icons: "fa fa-user",
-		separate: true,
 	},
 ];
