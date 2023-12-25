@@ -32,6 +32,7 @@ namespace BookShop.Model.Server
             var commnet = await context.comments.Include(f=>f.User).Include(f=>f.replyAdmin).ThenInclude(f=>f.User).Where(x => x.BookID == bookID).ToListAsync();
             return commnet.Select(x => new CommentVM
             {
+                Avatar=x.User.Avatar,
                 UserName=x.User?.UserName,
                 Star=x.Star,
                 UserID=x.User.Id,
@@ -39,6 +40,7 @@ namespace BookShop.Model.Server
                 Comment=x.UserComment,
                 replay=x.replyAdmin?.AdminComment,
                 UserNameAdmin=x.replyAdmin?.User.UserName,
+                AvatarAdmin=x.User.Avatar,
                 
             }).ToList();
         }
