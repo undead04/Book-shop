@@ -8,7 +8,7 @@ const Rating = ({ value, show = true }) => {
 	);
 
 	return (
-		<div className="flex items-center mt-2.5 mb-5">
+		<div className="flex items-center my-2.5">
 			{stars.map((filled, index) => (
 				<svg
 					key={index}

@@ -30,6 +30,12 @@ export const Home = () => {
 			.then((res) => {
 				setTopSaleOff(res.data.book);
 			});
+
+		axiosClient
+			.get("/Filter?categoryId=2&page=1&take=4")
+			.then((res) => {
+				setBooks(res.data.book);
+			});
 	}, []);
 
 	// const handleCheckOutStripe = async () => {
@@ -73,6 +79,10 @@ export const Home = () => {
 						headingName={"Top saleoff"}
 						books={topSaleOff}
 					/>
+				)}
+
+				{books && (
+					<ProductGroup headingName={"New release"} books={books} />
 				)}
 				{}
 			</div>

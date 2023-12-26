@@ -5,7 +5,6 @@ import { currencyFormatter } from "../util/currencyFormatter";
 import Button from "./Button";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import axiosClient from "../axios-client";
-import { Navigate } from "react-router-dom";
 
 const CartCheckOutForm = ({
 	carts,
@@ -13,6 +12,7 @@ const CartCheckOutForm = ({
 	total,
 	controlOpen,
 	reload,
+	setNotify,
 }) => {
 	const [paymentMethod, setPaymentMethod] = useState(1);
 	const { user, userId, token } = useStateContext();
@@ -20,14 +20,8 @@ const CartCheckOutForm = ({
 	const [phoneNumber, setPhoneNumber] = useState(user.phone);
 	const addressRef = useRef();
 	const handleChangePaymentMethod = (e) => {
-		console.log(e.target.value);
-		console.log(paymentMethod);
 		setPaymentMethod(e.target.value);
 	};
-
-	useEffect(() => {
-		console.log(user);
-	}, []);
 
 	const handleOrder = () => {
 		if (userId && token) {
@@ -43,7 +37,6 @@ const CartCheckOutForm = ({
 				books: carts,
 			};
 
-			console.log(data);
 			axiosClient
 				.post(apiUrl, JSON.stringify(data), {
 					headers: {
@@ -53,12 +46,22 @@ const CartCheckOutForm = ({
 				.then((res) => {
 					if (res.errorCode == 0) {
 						reload();
+						controlOpen[1](false);
+						setNotify({
+							isNotify: true,
+							message: "Thành công!",
+						});
 						if (res.data.pubKey && res.data.sessionId) {
 							handleBuyOnline(res.data.pubKey, res.data.sessionId);
 						} else {
 							console.log(res);
 						}
 						controlOpen[1](false);
+					} else {
+						setNotify({
+							isNotify: true,
+							message: "Lỗi xảy ra",
+						});
 					}
 				});
 		} else {

@@ -10,8 +10,6 @@ const RatingView = ({ bookId = -1 }) => {
 	}, []);
 
 	const getPercent = (star) => {
-		console.log(amountComment[star - 1]);
-		console.log(getTotalStar());
 		return (amountComment[star - 1] / ratingData.length) * 100 + "%";
 		// return amountComment[star - 1];
 	};
@@ -58,7 +56,6 @@ const RatingView = ({ bookId = -1 }) => {
 					</div>
 					<div>{ratingData.length || 0}</div>
 				</div>
-				{console.log(getPercent(4))}
 				<div className="col-span-8">
 					<div className="flex items-center gap-4">
 						<div>5</div>

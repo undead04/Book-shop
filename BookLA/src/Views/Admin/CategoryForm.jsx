@@ -23,7 +23,9 @@ const CategoryForm = () => {
 		console.log("fetch");
 		try {
 			axiosClient.get("/category").then((res) => {
-				setCateList(res.data.map((d) => ({ ...d, checked: false })));
+				setCateList(
+					res.data.categorys.map((d) => ({ ...d, checked: false })),
+				);
 			});
 		} catch (error) {}
 	};

@@ -14,8 +14,10 @@ const Products = () => {
 	const [loading, setLoading] = useState(true);
 	const [upToDown, setUpToDown] = useState("price-desc");
 	const [category, setCategory] = useState([]);
-	const [selectedTypes, setSelectedTypes] = useState([]);
-	const { search } = useParams();
+	const { search, typeID } = useParams();
+	const [selectedTypes, setSelectedTypes] = useState(() =>
+		typeID ? [typeID] : [],
+	);
 	const [searchValue, setSearchValue] = useState(search || "");
 	const [typOpen, setTypOpen] = useState(false);
 	const debounceValue = useDebounce(searchValue, 400);

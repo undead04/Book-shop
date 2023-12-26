@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Navigate, useParams, useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Rating from "../Rating";
 import axiosClient from "../../axios-client";
 import { currencyFormatter } from "../../util/currencyFormatter";
@@ -27,6 +29,7 @@ const test = {
 		"https://www.whitmorerarebooks.com/pictures/medium/2465.jpg",
 	],
 };
+
 const ProductDetail = () => {
 	const { id } = useParams();
 	const navigator = useNavigate();
@@ -39,10 +42,28 @@ const ProductDetail = () => {
 	const [proArray, setProArray] = useState([]);
 	const { userId, token } = useStateContext();
 	const openBuyFormControl = [openBuyForm, setOpenBuyForm];
+	const [notify, setNotify] = useState({
+		isNotify: false,
+		message: "",
+	});
 	const [canComment, setCanComment] = useState(false);
 	useEffect(() => {
 		fetchData();
 	}, []);
+
+	useEffect(() => {
+		notification();
+	}, [notify.isNotify]);
+
+	const notification = () => {
+		if (notify.isNotify && notify.message) {
+			toast(notify.message);
+		}
+		setNotify({
+			isNotify: false,
+			message: "",
+		});
+	};
 
 	const checkCanComment = () => {
 		if (userId && token) {
@@ -107,6 +128,7 @@ const ProductDetail = () => {
 			) : (
 				<>
 					<section className="text-gray-700 bg-white dark:text-white dark:bg-gray-900 body-font overflow-hidden">
+						<ToastContainer />
 						<div className="container px-5 py-12 mx-auto">
 							<div className="lg:w-4/5 mx-auto flex flex-wrap">
 								<img
@@ -208,10 +230,6 @@ const ProductDetail = () => {
 												{book.nameCategory.join(", ")}
 											</td>
 										</tr>
-										<tr className="table-row">
-											<td className="px-6 py-4">Lượt đánh giá</td>
-											<td className="px-6 py-4">0</td>
-										</tr>
 									</tbody>
 								</table>
 							</div>
@@ -262,6 +280,7 @@ const ProductDetail = () => {
 										<BuyingForm
 											book={book}
 											controlOpen={openBuyFormControl}
+											setNotify={setNotify}
 										/>
 									</div>
 								</>

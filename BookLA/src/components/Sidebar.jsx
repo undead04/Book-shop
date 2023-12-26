@@ -33,18 +33,16 @@ const Sidebar = () => {
 									<ul className="flex flex-col py-4 space-y-1">
 										{category.map((b) => {
 											return (
-												<>
-													<li key={b.id}>
-														<a
-															href="#"
-															className="relative flex flex-row items-center h-11 focus:outline-none hover:bg-gray-50 text-black dark:text-white dark:hover:text-gray-800 pr-6"
-														>
-															<span className="ml-6 text-sm tracking-wide truncate font-bold">
-																{b.name}
-															</span>
-														</a>
-													</li>
-												</>
+												<li key={b.id}>
+													<Link
+														to={`/book/type/${b.id}`}
+														className="relative flex flex-row items-center h-11 focus:outline-none hover:bg-gray-50 text-black dark:text-white dark:hover:text-gray-800 pr-6"
+													>
+														<span className="ml-6 text-sm tracking-wide truncate font-bold">
+															{b.name}
+														</span>
+													</Link>
+												</li>
 											);
 										})}
 									</ul>

@@ -50,7 +50,7 @@ const AdminForm = () => {
 	}, []);
 	const fetchData = () => {
 		axiosClient.get("/category").then((res) => {
-			setCategory(res.data);
+			setCategory(res.data.categorys);
 		});
 
 		if (!isNaN(+id)) {

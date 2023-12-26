@@ -6,8 +6,9 @@ const Cart = () => {
 	const [carts, setCarts] = useState([]);
 	useEffect(() => {}, [carts]);
 
-	const getCart = () => {
-		setCarts(JSON.parse(localStorage.getItem("cart")));
+	const getCart = async () => {
+		const cart = await JSON.parse(localStorage.getItem("cart"));
+		setCarts(cart);
 	};
 	return (
 		<div>

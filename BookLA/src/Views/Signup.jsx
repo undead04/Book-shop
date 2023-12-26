@@ -19,7 +19,7 @@ const Signup = () => {
 		comformPassword: "",
 	});
 
-	const { setToken, setUser } = useStateContext();
+	const { setToken, setUser, setUserId } = useStateContext();
 	useEffect(() => {}, [errors]);
 
 	const validateForm = () => {
@@ -135,10 +135,11 @@ const Signup = () => {
 							if (res.errorCode === 0) {
 								setUser({
 									role: res.data.role.join(""),
-									userId: res.data.userId,
+									userId: res.data.userID,
 									userName: res.data.userName,
 								});
-
+								console.log(res.data.userID);
+								setUserId(res.data.userID);
 								setToken(res.data.token);
 							}
 						});

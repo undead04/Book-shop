@@ -1,19 +1,21 @@
 import React, { useEffect, useRef, useState } from "react";
+
 import axiosClient from "../axios-client";
-import Input from "./Input";
 import Button from "./Button";
 import { useStateContext } from "../Contexts/ContextProvider";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { currencyFormatter } from "../util/currencyFormatter";
 import { loadStripe } from "@stripe/stripe-js";
+import { useNavigate } from "react-router-dom";
 
-const BuyingForm = ({ book, controlOpen }) => {
+const BuyingForm = ({ book, controlOpen, setNotify }) => {
 	const [paymentMethod, setPaymentMethod] = useState(1);
 	const [quantity, setQuantity] = useState(1);
 	const { user, userId } = useStateContext();
 	const [username, setUsername] = useState(user.userName);
 	const [phoneNumber, setPhoneNumber] = useState(user.phone);
 	const addressRef = useRef();
+	const navigate = useNavigate();
 	useEffect(() => {
 		addressRef.current.value = user.address || "";
 	}, []);
@@ -41,7 +43,6 @@ const BuyingForm = ({ book, controlOpen }) => {
 			],
 		};
 
-		console.log(data);
 		axiosClient
 			.post(apiUrl, JSON.stringify(data), {
 				headers: {
@@ -50,12 +51,23 @@ const BuyingForm = ({ book, controlOpen }) => {
 			})
 			.then((res) => {
 				if (res.errorCode == 0) {
+					controlOpen[1](false);
+					setNotify({
+						isNotify: true,
+						message: "Thành công!",
+					});
 					if (res.data.pubKey && res.data.sessionId) {
 						handleBuyOnline(res.data.pubKey, res.data.sessionId);
 					} else {
 						console.log(res);
 					}
+				} else {
+					setNotify({
+						isNotify: true,
+						message: "Lỗi xảy ra",
+					});
 				}
+				console.log(res);
 			});
 	};
 
@@ -83,7 +95,7 @@ const BuyingForm = ({ book, controlOpen }) => {
 		}
 	};
 	return (
-		<div className="w-2/3 px-6 py-12 rounded-lg bg-white text-black">
+		<div className="w-2/3 h-2/3 overflow-y-scroll px-6 py-12 rounded-lg bg-white text-black">
 			<div className="relative pb-24 text-xl">
 				<div className="flex items-center justify-between">
 					<div className="text-3xl">Thông tin thanh toán</div>

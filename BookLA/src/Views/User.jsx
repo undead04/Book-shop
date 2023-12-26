@@ -31,14 +31,17 @@ const User = () => {
 	}, []);
 
 	const getTotalPrice = () => {
-		const price = userOrders.order.reduce((pre, cur) => {
-			if (cur.status == "Complete") {
-				return (pre += cur.price);
-			}
-			return pre;
-		}, 0);
+		if (userOrders) {
+			const price = userOrders.order.reduce((pre, cur) => {
+				if (cur.status == "Complete") {
+					return (pre += cur.price);
+				}
+				return pre;
+			}, 0);
+			return price;
+		}
 
-		return price;
+		return 0;
 	};
 	return (
 		<>
@@ -239,7 +242,7 @@ const User = () => {
 											<div className="flex flex-col">
 												<div className="flex items-end">
 													<span className="text-2xl 2xl:text-3xl font-bold">
-														{Array.isArray(userOrders.order) &&
+														{userOrders &&
 															userOrders.order.length *
 																userOrders.totalPage}
 														{""}+
