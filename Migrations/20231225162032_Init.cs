@@ -33,6 +33,7 @@ namespace BookShop.Migrations
                     Avatar = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     About = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Create_at = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -228,6 +229,7 @@ namespace BookShop.Migrations
                     Image = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     SeriesID = table.Column<int>(type: "int", nullable: false),
+                    Create_at = table.Column<DateTime>(type: "datetime2", nullable: false),
                     serieID = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -282,13 +284,13 @@ namespace BookShop.Migrations
                         column: x => x.UserID,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Comments_Books_BookID",
                         column: x => x.BookID,
                         principalTable: "Books",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -335,32 +337,6 @@ namespace BookShop.Migrations
                         principalTable: "orders",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "replayAdmins",
-                columns: table => new
-                {
-                    AdminID = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    UserID = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    BookID = table.Column<int>(type: "int", nullable: false),
-                    AdminComment = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_replayAdmins", x => new { x.BookID, x.UserID, x.AdminID });
-                    table.ForeignKey(
-                        name: "FK_replayAdmins_AspNetUsers_AdminID",
-                        column: x => x.AdminID,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_replayAdmins_Comments_BookID_UserID",
-                        columns: x => new { x.BookID, x.UserID },
-                        principalTable: "Comments",
-                        principalColumns: new[] { "BookID", "UserID" },
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -443,17 +419,6 @@ namespace BookShop.Migrations
                 name: "IX_orders_UserID",
                 table: "orders",
                 column: "UserID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_replayAdmins_AdminID",
-                table: "replayAdmins",
-                column: "AdminID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_replayAdmins_BookID_UserID",
-                table: "replayAdmins",
-                columns: new[] { "BookID", "UserID" },
-                unique: true);
         }
 
         /// <inheritdoc />
@@ -478,13 +443,13 @@ namespace BookShop.Migrations
                 name: "BookCategorys");
 
             migrationBuilder.DropTable(
+                name: "Comments");
+
+            migrationBuilder.DropTable(
                 name: "Images");
 
             migrationBuilder.DropTable(
                 name: "OrderDetails");
-
-            migrationBuilder.DropTable(
-                name: "replayAdmins");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -493,19 +458,16 @@ namespace BookShop.Migrations
                 name: "Categorys");
 
             migrationBuilder.DropTable(
-                name: "orders");
-
-            migrationBuilder.DropTable(
-                name: "Comments");
-
-            migrationBuilder.DropTable(
-                name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
                 name: "Books");
 
             migrationBuilder.DropTable(
+                name: "orders");
+
+            migrationBuilder.DropTable(
                 name: "Series");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
         }
     }
 }

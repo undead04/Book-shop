@@ -29,7 +29,7 @@ namespace BookShop.Model.Server
 
         public async Task<List<CommentVM>> GetCommentBook(int  bookID)
         {
-            var commnet = await context.comments.Include(f=>f.User).Include(f=>f.replyAdmin).ThenInclude(f=>f.User).Where(x => x.BookID == bookID).ToListAsync();
+            var commnet = await context.comments.Include(f=>f.User).Where(x => x.BookID == bookID).ToListAsync();
             return commnet.Select(x => new CommentVM
             {
                 Avatar=x.User.Avatar,
@@ -38,9 +38,8 @@ namespace BookShop.Model.Server
                 UserID=x.User.Id,
                 CreateAt=x.Create_at.ToString(),
                 Comment=x.UserComment,
-                replay=x.replyAdmin?.AdminComment,
-                UserNameAdmin=x.replyAdmin?.User.UserName,
-                AvatarAdmin=x.User.Avatar,
+               
+              
                 
             }).ToList();
         }
@@ -79,20 +78,7 @@ namespace BookShop.Model.Server
         }
        
 
-        public async Task ReplyAdmin(ReplayModel replay)
-        {
-            var comment = new ReplyAdmin
-            {
-                AdminComment = replay.Comment,
-                AdminID = replay.AdminID,
-                UserID = replay.UserID,
-                BookID=replay.BookID
-               
-            };
-            await context.replyAdmins.AddAsync(comment);
-           await context.SaveChangesAsync();
-        }
-
+       
         public async Task UpdateComment(CommentModel commentModel)
         {
             var comment = await context.comments.FirstOrDefaultAsync(x => x.UserID==commentModel.UserId && x.BookID==commentModel.BookId);

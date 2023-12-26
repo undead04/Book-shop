@@ -89,25 +89,7 @@ namespace BookShop.Controllers
                 return BadRequest();
             }
         }
-        [HttpPost("replay")]
-        [Authorize(Roles = AppRole.Admin)]
-        public async Task<IActionResult> CreateAdminCommnet(ReplayModel replayModel)
-        {
-            try
-            {
-                var validation = await reponsitory.IsvalidComment(null, null);
-                if (!string.IsNullOrEmpty(validation))
-                {
-                    return Ok(BaseResponse<string>.Error(validation, 400));
-                }
-                await reponsitory.ReplyAdmin(replayModel);
-                return Ok(BaseResponse<string>.Success("Thanh cong"));
-            }
-            catch
-            {
-                return BadRequest();
-            }
-        }
+        
         [HttpGet("isComment/{bookID}/{userID}")]
         [Authorize]
         public async Task<IActionResult> isComment(int bookID,string userID)

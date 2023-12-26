@@ -12,6 +12,6 @@ namespace BookShop.Data
         public DateTime Create_at { get; set; }
         public ICollection<Order>? Orders { get; set; }
         public ICollection<Comment>? comments { get; set; }
-        public ICollection<ReplyAdmin>? replyAdmins { get; set; }
+        
     }
 }

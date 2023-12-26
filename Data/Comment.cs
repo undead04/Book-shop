@@ -17,7 +17,7 @@ namespace BookShop.Data
         public DateTime Create_at { get; set; }=DateTime.Now;
         public Book? book { get; set; }
         public ApplicationUser? User { get; set; }
-        public ReplyAdmin? replyAdmin { get; set; }
+       
 
 
     }

@@ -98,7 +98,7 @@ namespace BookShop.Model.Reponsitory
         public async Task<List<CommentVM>> GetFilterComment(int BookID, int Star)
         {
             var comment = await _context.comments.Include(f => f.User)
-                .Include(f=>f.replyAdmin)
+                
                 .Where(co => co.BookID == BookID && co.Star == Star).ToListAsync();
             return comment.Select(co => new CommentVM
             {
@@ -106,7 +106,7 @@ namespace BookShop.Model.Reponsitory
                 Comment=co.UserComment,
                 //ID=co.Id,
                 Star=co.Star,
-                replay=co.replyAdmin?.AdminComment,
+               
 
             }).ToList();
             
