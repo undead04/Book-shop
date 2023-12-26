@@ -12,11 +12,14 @@ namespace BookShop.Model.Server
         private readonly MyDBContext context;
         private UserManager<ApplicationUser> userManager;
         private readonly ClaimsPrincipal _user;
+       
+
         public UserReponsitory(MyDBContext context,UserManager<ApplicationUser> userManager,IHttpContextAccessor httpContextAccessor)
         {
             this.context = context;
             this.userManager = userManager;
             _user = httpContextAccessor.HttpContext.User;
+            
         }
        
 
@@ -26,7 +29,7 @@ namespace BookShop.Model.Server
         {
            
             var user =await userManager.FindByIdAsync(userID);
-           
+            var role = await userManager.GetRolesAsync(user);
             if (user != null)
             {
                 return new UserVM
@@ -36,9 +39,10 @@ namespace BookShop.Model.Server
                     Phone = user.PhoneNumber,
                     Email = user.Email,
                     ID = user.Id,
-                    Address=user.Address,
+                    Address = user.Address,
                     About = user.About,
-                    Create_at = user.Create_at.ToString()
+                    Create_at = user.Create_at.ToString(),
+                    Role = string.Concat(role)
                     
                 };
             }
@@ -53,14 +57,15 @@ namespace BookShop.Model.Server
                 user = user.Where(us => us.UserName.Contains(search) || us.Email.Contains(search));
             }
             user = user.OrderBy(us => us.UserName).ThenBy(us => us.Email);
+
             return user.Select(user => new UserVM
             {
                 UserName = user.UserName,
                 Avatar = user.Avatar,
                 Phone = user.PhoneNumber,
                 Email = user.Email,
-                ID=user.Id,
-                Address=user.Address,
+                ID = user.Id,
+                Address = user.Address,
                 About = user.About,
                 Create_at = user.Create_at.ToString()
 

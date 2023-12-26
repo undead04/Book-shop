@@ -18,6 +18,7 @@ using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http.Features;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -103,7 +104,10 @@ builder.Services.AddCors(options =>
 });
 
 // tạo role
-
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = 60000000; // 60 MB
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

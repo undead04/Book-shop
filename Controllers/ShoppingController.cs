@@ -98,14 +98,14 @@ namespace BookShop.Controllers
             }
         }
         [HttpGet("success")]
-        [Authorize]
+        
         public async Task<IActionResult> CheckoutSuccess(string sessionId)
         {
             try
             {
 
 
-                return Redirect(s_wasmClientURL + "success");
+                return Redirect(s_wasmClientURL + "order");
             }
             catch
             {

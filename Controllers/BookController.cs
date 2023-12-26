@@ -38,7 +38,7 @@ namespace BookShop.Controllers
                     Image = bookModel.Image,
                     SecondaryImage = bookModel.SecondaryImage,
                     Description = bookModel.Description,
-                    SeriesID = bookModel.SeriesID,
+                   
                     Create=bookModel.Create,
                 };
                 var resultValidion = _validation.Validate(CreateBook);
@@ -127,7 +127,7 @@ namespace BookShop.Controllers
                     Image = bookModel.Image,
                     SecondaryImage = bookModel.SecondaryImage,
                     Description = bookModel.Description,
-                    SeriesID = bookModel.SeriesID,
+                    
                     Create = bookModel.Create,
                 };
                 var resultValidion = _validation.Validate(updateBook);

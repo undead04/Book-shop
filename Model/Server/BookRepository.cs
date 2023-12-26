@@ -22,7 +22,7 @@ namespace BookShop.Model.Reponsitory
                 OldPrice=bookModel.OldPrice,
                 NewPrice=bookModel.NewPrice,
                 Author=bookModel.Author,
-                SeriesID=bookModel.SeriesID,
+                
                 Quantity=bookModel.Quantity,
                 Description=bookModel.Description,
                 Create_at=bookModel.Create
@@ -188,7 +188,6 @@ namespace BookShop.Model.Reponsitory
             book.Quantity = bookModel.Quantity; 
             book.Author = bookModel.Author;
             book.Publisher = bookModel.Publisher;
-            book.SeriesID = bookModel.SeriesID;
             book.Description = bookModel.Description;
             book.Create_at = bookModel.Create;
             string[] imageExtensions = { ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".tiff", ".tif", ".svg", ".webp", ".ico" };
@@ -216,7 +215,16 @@ namespace BookShop.Model.Reponsitory
             }
             if (bookModel.SecondaryImage != null)
             {
-               
+                foreach (var imageOld in book.images!)
+                {
+                    string PathImageOld = Path.Combine(Directory.GetCurrentDirectory(), "Resources", imageOld.Image);
+                    if (File.Exists(PathImageOld))
+                    {
+                        File.Delete(PathImageOld);
+                    }
+
+                }
+
                 foreach (var file in bookModel.SecondaryImage)
                 {
 
@@ -232,20 +240,19 @@ namespace BookShop.Model.Reponsitory
                         {
                             await file.CopyToAsync(fileStream);
                         }
-                        
-                        foreach (var imageOld in book.images!)
+                        var imagebook = new Images
                         {
-                            string PathImageOld = Path.Combine(Directory.GetCurrentDirectory(), "Resources", imageOld.Image);
-                            if (File.Exists(PathImageOld))
-                            {
-                                File.Delete(PathImageOld);
-                            }
-                            imageOld.Image = newNameImage;
-                            
-                        }
+                            BookID = book.ID,
+                            Image = newNameImage,
+                        };
+                        await _context.images.AddAsync(imagebook);
+
+
                     }
+
                 }
-              
+               
+
 
             }
             foreach (var category in book.bookCategories)

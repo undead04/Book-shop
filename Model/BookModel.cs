@@ -16,7 +16,7 @@ namespace BookShop.Model
         public List<IFormFile>? SecondaryImage { get; set; }
         public string Description { get; set; } = string.Empty;
         public DateTime Create { get; set; }
-        public int SeriesID { get; set; }
+      
 
     }
     public class BookVM

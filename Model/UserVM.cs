@@ -9,7 +9,8 @@
         public string Phone { get; set; } = string.Empty;
         public string ID { get; set; } = string.Empty;
         public string About { get; set; } = string.Empty;
-        public string Create_at { get; set; } = string.Empty;   
+        public string Create_at { get; set; } = string.Empty;
+        public string Role { get; set; } = string.Empty;
     }
     public class PageUserVM
     {
