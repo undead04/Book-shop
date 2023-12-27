@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axiosClient from "../axios-client";
 import Button from "./Button";
 import { XMarkIcon } from "@heroicons/react/24/outline";
@@ -11,6 +11,10 @@ const UserForm = ({ user, controlForm }) => {
 	const phoneRef = useRef();
 	const aboutRef = useRef();
 	const { setUser } = useStateContext();
+	const [userForm, setUserForm] = useState({});
+	useEffect(() => {
+		setUserForm(user);
+	}, []);
 	const reloadUser = () => {
 		axiosClient
 			.get(`/user/${user.id}`)
@@ -21,9 +25,7 @@ const UserForm = ({ user, controlForm }) => {
 		const frmData = new FormData();
 		frmData.append(
 			"address",
-			addressRef.current.value
-				? addressRef.current.value
-				: user.address,
+			userForm.address ? userForm.address : user.address,
 		);
 		frmData.append(
 			"avatar",
@@ -31,13 +33,12 @@ const UserForm = ({ user, controlForm }) => {
 		);
 		frmData.append(
 			"phone",
-			phoneRef.current.value ? phoneRef.current.value : user.phone,
+			userForm.phone ? userForm.phone : user.phone,
 		);
 		frmData.append(
 			"about",
-			aboutRef.current.value ? aboutRef.current.value : user.about,
+			userForm.about ? userForm.about : user.about,
 		);
-		console.log(frmData);
 		controlForm[1](false);
 		axiosClient.put(`/user/${user.id}`, frmData).then((res) => {
 			reloadUser();
@@ -61,7 +62,10 @@ const UserForm = ({ user, controlForm }) => {
 						<label className="block text-black" htmlFor="address">
 							Avatar
 						</label>
-						<AvatarUpload ref={avatarRef} />
+						<AvatarUpload
+							ref={avatarRef}
+							initialImage={user.avatar}
+						/>
 					</div>
 					<div className="py-4">
 						<label className="block text-black" htmlFor="address">
@@ -80,7 +84,13 @@ const UserForm = ({ user, controlForm }) => {
 							Số điện thoại
 						</label>
 						<input
-							ref={phoneRef}
+							value={userForm.phone || ""}
+							onChange={(e) =>
+								setUserForm((prev) => ({
+									...prev,
+									phone: e.target.value,
+								}))
+							}
 							className="w-full text-black p-3 my-2 border"
 							name="phone"
 							id="phone"
@@ -91,7 +101,13 @@ const UserForm = ({ user, controlForm }) => {
 							Địa chỉ
 						</label>
 						<textarea
-							ref={addressRef}
+							value={userForm.address || ""}
+							onChange={(e) =>
+								setUserForm((prev) => ({
+									...prev,
+									address: e.target.value,
+								}))
+							}
 							className="w-full text-black p-3 my-2 border"
 							name="address"
 							id="address"
@@ -105,7 +121,13 @@ const UserForm = ({ user, controlForm }) => {
 							Thông tin giới thiệu
 						</label>
 						<textarea
-							ref={aboutRef}
+							value={userForm.about || ""}
+							onChange={(e) =>
+								setUserForm((prev) => ({
+									...prev,
+									about: e.target.value,
+								}))
+							}
 							className="w-full text-black p-3 my-2 border"
 							name="about"
 							id="about"

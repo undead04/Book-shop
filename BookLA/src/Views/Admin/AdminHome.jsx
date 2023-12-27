@@ -98,7 +98,7 @@ const AdminHome = () => {
 			currency: true,
 		},
 		{
-			title: "Today's money",
+			title: "Total's income",
 			icon: "BanknotesIcon",
 			currency: true,
 		},

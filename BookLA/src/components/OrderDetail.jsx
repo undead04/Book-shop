@@ -6,6 +6,7 @@ import { useStateContext } from "../Contexts/ContextProvider";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { currencyFormatter } from "../util/currencyFormatter";
 import { loadStripe } from "@stripe/stripe-js";
+import { Link } from "react-router-dom";
 
 const OrderDetail = ({ orderId, controlOpen }) => {
 	const [order, setOrder] = useState({
@@ -95,7 +96,12 @@ const OrderDetail = ({ orderId, controlOpen }) => {
 						>
 							<div className="">{i + 1}.</div>
 							<div className="flex-1">
-								<div className="truncate text-lg">{o.name}</div>
+								<Link
+									to={`/book/${o.bookID}`}
+									className="truncate text-lg"
+								>
+									{o.name}
+								</Link>
 								{/* name */}
 
 								{/* tac gia */}

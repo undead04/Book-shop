@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Rating from "./Rating";
 import axiosClient from "../axios-client";
 
-const RatingView = ({ bookId = -1 }) => {
+const RatingView = ({ bookId = -1, star = 1 }) => {
 	const [ratingData, setRatingData] = useState([]);
 	const [amountComment, setAmountComment] = useState([]);
 	useEffect(() => {
@@ -50,9 +50,9 @@ const RatingView = ({ bookId = -1 }) => {
 		<div className="px-3 py-6 bg-gray-700">
 			<div className="grid grid-cols-12 items-center gap-8">
 				<div className="col-span-4 text-center items-center">
-					<div className="text-5xl">{getAverageStar()}</div>
+					<div className="text-5xl">{star}</div>
 					<div className="mx-auto w-fit">
-						<Rating value={getAverageStar()} show={false} />
+						<Rating value={star} show={false} />
 					</div>
 					<div>{ratingData.length || 0}</div>
 				</div>

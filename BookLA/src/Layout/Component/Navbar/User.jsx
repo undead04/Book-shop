@@ -65,7 +65,7 @@ const User = () => {
 									? `${import.meta.env.VITE_API_BASE_URL}/api/image/${
 											user.avatar
 									  }`
-									: "./default-user.webp"
+									: "/default-user.webp"
 							}
 							alt="user"
 						/>

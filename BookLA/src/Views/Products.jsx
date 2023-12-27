@@ -204,16 +204,18 @@ const Products = () => {
 							</button>
 						</div>
 						<div className="relative ml-auto min-w-[300px]">
-							<div>
-								<button
-									className={
-										"w-full border dark:border-white p-4 shadow-lg"
-									}
-									onClick={() => setTypOpen((prev) => !prev)}
-								>
-									Chọn thể loại
-								</button>
-							</div>
+							{isNaN(typeID) && (
+								<div>
+									<button
+										className={
+											"w-full border dark:border-white p-4 shadow-lg"
+										}
+										onClick={() => setTypOpen((prev) => !prev)}
+									>
+										Chọn thể loại
+									</button>
+								</div>
+							)}
 						</div>
 					</div>
 					{typOpen && (

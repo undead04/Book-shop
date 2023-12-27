@@ -109,6 +109,7 @@ const ProductDetail = () => {
 						),
 					);
 				});
+
 				setBook(res.data);
 				setLoading(false);
 			});
@@ -118,7 +119,6 @@ const ProductDetail = () => {
 	};
 	const fetchComment = () => {
 		axiosClient.get(`/comment/bookID/${id}`).then((res) => {
-			console.log(res.data);
 			setComments(res.data);
 		});
 	};
@@ -129,23 +129,27 @@ const ProductDetail = () => {
 	};
 
 	const handleAddCart = () => {
-		const storedCart = localStorage.getItem("cart");
-		let cart = storedCart ? JSON.parse(storedCart) : [];
+		if (userId) {
+			const storedCart = localStorage.getItem("cart");
+			let cart = storedCart ? JSON.parse(storedCart) : [];
 
-		const existingProduct = cart.find((i) => i.id == +id);
-		if (!!existingProduct) {
-			if (existingProduct.quantity < book.quantity) {
-				existingProduct.quantity += 1;
-				toast("Thêm vào giỏ hàng thành công");
+			const existingProduct = cart.find((i) => i.id == +id);
+			if (!!existingProduct) {
+				if (existingProduct.quantity < book.quantity) {
+					existingProduct.quantity += 1;
+					toast("Thêm vào giỏ hàng thành công");
+				} else {
+					toast("Quá số lượng sản phẩm");
+				}
 			} else {
-				toast("Quá số lượng sản phẩm");
+				cart.push({ id: +id, quantity: 1 });
+				toast("Thêm vào giỏ hàng thành công");
 			}
-		} else {
-			cart.push({ id: +id, quantity: 1 });
-			toast("Thêm vào giỏ hàng thành công");
-		}
 
-		localStorage.setItem("cart", JSON.stringify(cart));
+			localStorage.setItem("cart", JSON.stringify(cart));
+		} else {
+			toast("Bạn cần đăng nhập!");
+		}
 	};
 
 	return (
@@ -188,9 +192,13 @@ const ProductDetail = () => {
 											{currencyFormatter.format(book.newPrice)}
 										</span>
 
-										<span className="ml-4 text-sm title-font font-medium  dark:text-white text-gray-900 line-through">
-											{currencyFormatter.format(book.oldPrice)}
-										</span>
+										{book.newPrice == book.oldPrice ? (
+											""
+										) : (
+											<span className="ml-4 text-sm title-font font-medium  dark:text-white text-gray-900 line-through">
+												{currencyFormatter.format(book.oldPrice)}
+											</span>
+										)}
 										<div className="flex items-center gap-4 ml-auto">
 											<button
 												onClick={handleAddCart}
@@ -271,7 +279,7 @@ const ProductDetail = () => {
 								</span>
 							</div>
 							<div className="px-3">
-								<RatingView bookId={id} />
+								<RatingView bookId={id} star={book.totalStar} />
 								<div className="flex gap-4 my-3 w-fit ml-auto">
 									<Button
 										text={"Viết đánh giá"}

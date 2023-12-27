@@ -38,33 +38,6 @@ export const Home = () => {
 			});
 	}, []);
 
-	// const handleCheckOutStripe = async () => {
-	// 	try {
-	// 		const response = await axiosClient.post("/shopping/buy", [
-	// 			{ id: 1, quantity: 10 },
-	// 		]);
-	// 		const { pubKey, sessionId } = response.data.data;
-
-	// 		// Initialize Stripe
-	// 		const stripe = await loadStripe(pubKey);
-
-	// 		// Redirect to Checkout
-	// 		const { error } = await stripe.redirectToCheckout({
-	// 			sessionId: sessionId,
-	// 		});
-
-	// 		if (error) {
-	// 			// Handle error
-	// 			console.error(error.message);
-	// 		}
-	// 	} catch (error) {
-	// 		// Handle axios or other errors
-	// 		console.error("Error:", error);
-	// 	}
-	// };
-	// const handleCheckOut = (e) => {
-	// 	e.preventDefault();
-	// };
 	return (
 		<>
 			<div className="relative w-auto">

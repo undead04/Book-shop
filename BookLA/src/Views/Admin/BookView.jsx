@@ -3,7 +3,6 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axiosClient from "../../axios-client";
 import { currencyFormatter } from "../../util/currencyFormatter";
-import Pagination from "../../components/Pagination";
 import Table from "../../components/Admin/Table";
 import Button from "../../components/Button";
 import MDialog from "../../components/Dialog";
@@ -153,7 +152,7 @@ const BookView = () => {
 	};
 
 	return (
-		<div className="grid lg:grid-cols-4 grid-cols-1 gap-4">
+		<div className="grid lg:grid-cols-4 grid-cols-1 gap-4 min-h-screen">
 			<div className="col-span-3 bg-white shadow-lg rounded-lg my-4 p-4">
 				<div className="shadow-md rounded-md h-full">
 					<div className="mb-4 flex w-full justify-between items-center">
@@ -185,6 +184,7 @@ const BookView = () => {
 			</div>
 
 			<div className="col-span-1 bg-white shadow-lg  rounded-lg my-4 p-4">
+				<div className="text text-xl mb-2 text-center">OPTIONS</div>
 				<div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
 					<Button
 						classNames={

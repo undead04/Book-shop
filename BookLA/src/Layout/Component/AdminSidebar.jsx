@@ -44,11 +44,6 @@ const AdminSidebar = () => {
 			to: "/order",
 			icons: "NewspaperIcon",
 		},
-		{
-			title: "Income",
-			to: "/income",
-			icons: "BanknotesIcon",
-		},
 	];
 
 	return (

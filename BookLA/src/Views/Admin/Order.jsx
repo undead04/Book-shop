@@ -14,7 +14,7 @@ const Order = () => {
 	const [cancelledOrders, setCancelledOrders] = useState([]);
 	const [page, setPage] = useState([]);
 	const [currentPage, setCurrentPage] = useState(1);
-	const [currentTab, setcurrentTab] = useState(-2);
+	const [currentTab, setCurrentTab] = useState(-2);
 	const [orderDetailId, setOrderDetailId] = useState(-1);
 	const [detailOpen, setDetailOpen] = useState(false);
 	const ORDER_TAKE = 7;
@@ -61,7 +61,11 @@ const Order = () => {
 	};
 	const fetchWaitOrders = async () => {
 		await axiosClient
-			.get(`${import.meta.env.VITE_API_BASE_URL}/api/Order?status=0`)
+			.get(
+				`${
+					import.meta.env.VITE_API_BASE_URL
+				}/api/Order?status=0&page=${currentPage}&take=${ORDER_TAKE}`,
+			)
 			.then((res) => {
 				setWaitConfirmationOrders(res.data.order);
 				setPage(
@@ -74,7 +78,11 @@ const Order = () => {
 	};
 	const fetchWaitDelivery = async () => {
 		axiosClient
-			.get(`${import.meta.env.VITE_API_BASE_URL}/api/Order?status=1`)
+			.get(
+				`${
+					import.meta.env.VITE_API_BASE_URL
+				}/api/Order?status=1&page=${currentPage}&take=${ORDER_TAKE}`,
+			)
 			.then((res) => {
 				setWaitDelivery(res.data.order);
 				setPage(
@@ -88,7 +96,11 @@ const Order = () => {
 
 	const fetchCompleteOrders = async () => {
 		await axiosClient
-			.get(`${import.meta.env.VITE_API_BASE_URL}/api/Order?status=3`)
+			.get(
+				`${
+					import.meta.env.VITE_API_BASE_URL
+				}/api/Order?status=3&page=${currentPage}&take=${ORDER_TAKE}`,
+			)
 			.then((res) => {
 				setCompleteOrders(res.data.order);
 				setPage(
@@ -102,7 +114,11 @@ const Order = () => {
 
 	const fetchCancelOrders = async () => {
 		await axiosClient
-			.get(`${import.meta.env.VITE_API_BASE_URL}/api/Order?status=-1`)
+			.get(
+				`${
+					import.meta.env.VITE_API_BASE_URL
+				}/api/Order?status=-1&page=${currentPage}&take=${ORDER_TAKE}`,
+			)
 			.then((res) => {
 				setCancelledOrders(res.data.order);
 				setPage(
@@ -160,8 +176,8 @@ const Order = () => {
 		setDetailOpen(true);
 	};
 	return (
-		<div className="p-4">
-			<div className="panel">
+		<div className="p-4 ">
+			<div className="panel  min-h-screen">
 				<div className="flex items-center justify-end w-fit gap-2 ml-auto">
 					<span className="text-xl">Số trang</span>
 					<select
@@ -181,7 +197,7 @@ const Order = () => {
 							className={
 								"button border-t-4 border-blue-500 w-full rounded-none py-2"
 							}
-							onClick={() => setcurrentTab(-2)}
+							onClick={() => setCurrentTab(-2)}
 						>
 							All
 						</Tab>
@@ -189,7 +205,7 @@ const Order = () => {
 							className={
 								"button border-t-4 border-blue-500 w-full rounded-none py-2"
 							}
-							onClick={() => setcurrentTab(0)}
+							onClick={() => setCurrentTab(0)}
 						>
 							Waiting Confimation
 						</Tab>
@@ -197,7 +213,7 @@ const Order = () => {
 							className={
 								"button border-t-4 border-blue-500 w-full rounded-none py-2"
 							}
-							onClick={() => setcurrentTab(1)}
+							onClick={() => setCurrentTab(1)}
 						>
 							Waiting Delivery
 						</Tab>
@@ -205,7 +221,7 @@ const Order = () => {
 							className={
 								"button border-t-4 border-blue-500 w-full rounded-none py-2"
 							}
-							onClick={() => setcurrentTab(3)}
+							onClick={() => setCurrentTab(3)}
 						>
 							Complete
 						</Tab>
@@ -213,7 +229,7 @@ const Order = () => {
 							className={
 								"button border-t-4 border-blue-500 w-full rounded-none py-2"
 							}
-							onClick={() => setcurrentTab(-1)}
+							onClick={() => setCurrentTab(-1)}
 						>
 							Cancel
 						</Tab>

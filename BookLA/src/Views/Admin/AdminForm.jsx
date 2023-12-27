@@ -55,31 +55,34 @@ const AdminForm = () => {
 			setCategory(res.data.categorys);
 		});
 
+		fetchBook();
+	};
+
+	const fetchBook = () => {
 		if (!isNaN(+id)) {
 			setBookId(+id);
 			axiosClient.get(`/book/${id}`).then((res) => {
 				setBook(res.data);
+				category.map((c) => {
+					if (res.data.nameCategory.includes(c.name)) {
+						setSelectedTypes((prev) => [...prev, c.id]);
+					}
+				});
 			});
 		}
 	};
-
-	useEffect(() => {
-		console.log(book.name);
-	}, [book]);
 
 	const handleCheckboxChange = (id) => {
 		if (selectedTypes.includes(id)) {
 			var newTypes = selectedTypes.filter((s) => s !== id);
 			setSelectedTypes(newTypes);
 		} else {
-			console.log("Add item", id);
 			setSelectedTypes((prev) => [...prev, id]);
 		}
 	};
 
 	const handleAddBook = (e) => {
 		e.preventDefault();
-		console.log(dateTime);
 		const frmData = new FormData();
 		frmData.append("name", book.name);
 		frmData.append("supplier", book.supplier);
@@ -101,16 +104,31 @@ const AdminForm = () => {
 		frmData.append("create", dateTime);
 		if (id) {
 			axiosClient.put(`/book/${id}`, frmData).then((res) => {
-				toast("Sửa sản phẩm thành công!");
+				if (res.errorCode == 400) {
+					toast(
+						"Đã xảy ra lỗi, đảm bảo các trường không trống và thử lại",
+					);
+				} else {
+					toast("Sửa sản phẩm thành công!");
+					setTimeout(() => {
+						navigator("/admin/books/all");
+					}, 5000);
+				}
 			});
 		} else {
 			axiosClient.post("/book", frmData).then((res) => {
-				toast("Thêm sản phẩm thành công!");
+				if (res.errorCode == 400) {
+					toast(
+						"Đã xảy ra lỗi, đảm bảo các trường không trống và thử lại",
+					);
+				} else {
+					toast("Thêm sản phẩm thành công!");
+					setTimeout(() => {
+						navigator("/admin/books/all");
+					}, 5000);
+				}
 			});
 		}
-		setTimeout(() => {
-			navigator("/admin/books/all");
-		}, 5000);
 	};
 
 	return (

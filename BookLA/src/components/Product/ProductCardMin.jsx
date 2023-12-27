@@ -22,7 +22,6 @@ const ProductCardMin = ({ items }) => {
 
 		const storedCart = localStorage.getItem("cart");
 		let cart = storedCart ? JSON.parse(storedCart) : [];
-
 		const existingProduct = cart.find((i) => i.id === id);
 		if (!!existingProduct) {
 			if (existingProduct.quantity < amount) {
@@ -82,7 +81,7 @@ const ProductCardMin = ({ items }) => {
 					<button
 						onClick={(e) => {
 							e.preventDefault();
-							handleAddToCart(items.id, items.quantity);
+							handleAddToCart(items.id, items);
 						}}
 					>
 						<PlusIcon className="w-8 h-8 dark:text-white text-black hover:text-green-500 hover:scale-150 duration-200" />

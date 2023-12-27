@@ -13,7 +13,6 @@ const DefaultLayout = () => {
 		try {
 			if (userId) {
 				axiosClient.get(`/user/${userId}`).then((res) => {
-					console.log(res.data);
 					setUser(res.data);
 				});
 			}

@@ -1,7 +1,10 @@
 import React, { forwardRef, useState } from "react";
 
-const AvatarUpload = forwardRef(({}, ref) => {
-	const [selectedImage, setSelectedImage] = useState({});
+const AvatarUpload = forwardRef(({ initialImage }, ref) => {
+	const [selectedImage, setSelectedImage] = useState({
+		url: "",
+		file: "",
+	});
 	const handleImageChange = (e) => {
 		const file = e.target.files[0];
 
@@ -11,51 +14,41 @@ const AvatarUpload = forwardRef(({}, ref) => {
 		}
 	};
 
-	const handleDeleteImage = () => {
-		setSelectedImage(null);
-	};
-
 	return (
 		<div>
 			<input ref={ref} type="file" onChange={handleImageChange} />
 
 			<div className="mt-4 w-full">
-				{selectedImage && (
-					<div className="flex w-full">
+				<div className="flex w-full">
+					{selectedImage.url ? (
 						<div className="relative mx-4">
 							<div className=" w-[100px] h-[100px]">
 								{selectedImage.url && (
 									<img
 										src={selectedImage.url}
 										alt="Selected Image"
-										style={{ width: "100px", height: "100px" }}
+										className="w-[100px] h-[100px] object-cover"
 									/>
 								)}
-								<div className="absolute inset-0">
-									<button
-										className="cursor-pointer"
-										onClick={handleDeleteImage}
-									>
-										<svg
-											xmlns="http://www.w3.org/2000/svg"
-											fill="none"
-											viewBox="0 0 24 24"
-											strokeWidth={1.5}
-											stroke="currentColor"
-											className="w-6 h-6 text-white"
-										>
-											<path
-												strokeLinecap="round"
-												strokeLinejoin="round"
-												d="M6 18L18 6M6 6l12 12"
-											/>
-										</svg>
-									</button>
-								</div>
+								<div className="absolute inset-0"></div>
 							</div>
 						</div>
-					</div>
-				)}
+					) : (
+						<>
+							<div className="relative mx-4">
+								<div className=" w-[100px] h-[100px]">
+									<img
+										src={`${
+											import.meta.env.VITE_API_BASE_URL
+										}/api/image/${initialImage}`}
+										alt="Selected Image"
+										className="w-[100px] h-[100px] object-cover"
+									/>
+								</div>
+							</div>
+						</>
+					)}
+				</div>
 			</div>
 		</div>
 	);

@@ -31,7 +31,6 @@ export const ContextProvider = ({ children }) => {
 	const setUserId = (id) => {
 		_setUserId(id);
 		if (id) {
-			console.log("ID", id);
 			localStorage.setItem("USER_ID", id);
 		} else {
 			localStorage.removeItem("USER_ID");

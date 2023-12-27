@@ -21,8 +21,6 @@ const BuyingForm = ({ book, controlOpen, setNotify }) => {
 	}, []);
 
 	const handleChangePaymentMethod = (e) => {
-		console.log(e.target.value);
-		console.log(paymentMethod);
 		setPaymentMethod(e.target.value);
 	};
 	const handleOrder = () => {
@@ -59,7 +57,6 @@ const BuyingForm = ({ book, controlOpen, setNotify }) => {
 					if (res.data.pubKey && res.data.sessionId) {
 						handleBuyOnline(res.data.pubKey, res.data.sessionId);
 					} else {
-						console.log(res);
 					}
 				} else {
 					setNotify({
@@ -67,7 +64,6 @@ const BuyingForm = ({ book, controlOpen, setNotify }) => {
 						message: "Lỗi xảy ra",
 					});
 				}
-				console.log(res);
 			});
 	};
 
@@ -88,11 +84,8 @@ const BuyingForm = ({ book, controlOpen, setNotify }) => {
 			}
 			if (error) {
 				// Handle error
-				console.error(error.message);
 			}
-		} catch (error) {
-			console.error("Error:", error);
-		}
+		} catch (error) {}
 	};
 	return (
 		<div className="w-2/3 h-2/3 overflow-y-scroll px-6 py-12 rounded-lg bg-white text-black">

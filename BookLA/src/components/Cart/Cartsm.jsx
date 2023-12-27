@@ -28,7 +28,6 @@ const Cartsm = ({ items = [] }) => {
 		const { id } = item;
 		const newCartList = cartList.filter((p) => p.id != id);
 		setCartList(newCartList);
-		console.log(cartBooks);
 		localStorage.setItem("cart", JSON.stringify(newCartList));
 	};
 	return (

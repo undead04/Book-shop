@@ -107,7 +107,6 @@ const Search = ({
 						spellCheck={false}
 						ref={searchRef}
 						onChange={(e) => {
-							console.log(e.target.value);
 							setValue(e.target.value);
 						}}
 						value={value}

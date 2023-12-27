@@ -224,9 +224,12 @@ const Cart = () => {
 												</div>
 												<div className="border-b items-stretch border-gray-200 md:flex-row flex-col flex justify-between w-full pb-8 space-y-4 md:space-y-0 h-full">
 													<div className="w-full flex flex-col justify-start items-start space-y-8">
-														<h3 className="text-xl dark:text-white xl:text-2xl font-semibold leading-6 text-gray-800">
+														<Link
+															to={`/book/${p.id}`}
+															className="text-xl dark:text-white xl:text-2xl font-semibold leading-6 text-gray-800"
+														>
 															{p.name}
-														</h3>
+														</Link>
 														<div className="flex justify-start items-start flex-col space-y-2">
 															<p className="text-sm dark:text-white leading-none text-gray-800">
 																<span className="dark:text-gray-400 text-gray-300">
@@ -310,12 +313,12 @@ const Cart = () => {
 															<div className="flex items-center gap-2">
 																<Button
 																	text={"Xóa"}
-																	classNames={"text-white"}
+																	classNames={"text"}
 																	onClick={() =>
 																		handleRemoveCart(cartItem[index])
 																	}
 																/>
-																<TrashIcon className="w-4 h-4 text-white" />
+																<TrashIcon className="w-4 h-4 text" />
 															</div>
 														</div>
 													</div>
@@ -364,7 +367,6 @@ const Cart = () => {
 														cartItem[index].id,
 													) ? (
 														<div key={index}>
-															{/* {console.log(proArray[index].newPrice)} */}
 															<div className="flex justify-between items-center">
 																<div className="text-white">
 																	{index + 1 + "."}{" "}

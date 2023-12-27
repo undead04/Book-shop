@@ -1,7 +1,7 @@
 import React from "react";
 
 const Rating = ({ value, show = true }) => {
-	const rating = Math.max(1, Math.min(5, value));
+	const rating = Math.max(0, Math.min(5, value));
 	const stars = Array.from(
 		{ length: 5 },
 		(_, index) => index + 1 <= rating,
