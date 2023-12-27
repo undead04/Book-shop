@@ -2,6 +2,8 @@ import { Tab } from "@headlessui/react";
 import React, { useEffect, useState } from "react";
 import axiosClient from "../../axios-client";
 import { Link } from "react-router-dom";
+import Button from "../../components/Button";
+import OrderDetail from "../../components/OrderDetail";
 
 const Order = () => {
 	const [orders, setOrders] = useState([]);
@@ -13,6 +15,8 @@ const Order = () => {
 	const [page, setPage] = useState([]);
 	const [currentPage, setCurrentPage] = useState(1);
 	const [currentTab, setcurrentTab] = useState(-2);
+	const [orderDetailId, setOrderDetailId] = useState(-1);
+	const [detailOpen, setDetailOpen] = useState(false);
 	const ORDER_TAKE = 7;
 
 	const handlePageChange = (e) => {
@@ -43,11 +47,7 @@ const Order = () => {
 
 	const fetchAllOrder = async () => {
 		await axiosClient
-			.get(
-				`${
-					import.meta.env.VITE_API_BASE_URL
-				}/api/Order?page=${currentPage}&take=${ORDER_TAKE}`,
-			)
+			.get(`/Order?page=${currentPage}&take=${ORDER_TAKE}`)
 			.then((res) => {
 				console.log(res);
 				setPage(
@@ -152,6 +152,13 @@ const Order = () => {
 				fetchWaitOrders();
 			});
 	};
+
+	const openDetail = (e, id) => {
+		e.preventDefault();
+		setOrderDetailId(id);
+
+		setDetailOpen(true);
+	};
 	return (
 		<div className="p-4">
 			<div className="panel">
@@ -236,9 +243,12 @@ const Order = () => {
 													<td>{i.orderDate}</td>
 													<td>{i.status}</td>
 													<td>
-														<Link to={`/admin/order/${i.orderID}`}>
-															..
-														</Link>
+														<Button
+															text={"..."}
+															onClick={(e) =>
+																openDetail(e, i.orderID)
+															}
+														/>
 													</td>
 												</tr>
 											))}
@@ -299,9 +309,12 @@ const Order = () => {
 													</td>
 
 													<td>
-														<Link to={`/admin/order/${i.orderID}`}>
-															..
-														</Link>
+														<Button
+															text={"..."}
+															onClick={(e) =>
+																openDetail(e, i.orderID)
+															}
+														/>
 													</td>
 												</tr>
 											))}
@@ -361,9 +374,12 @@ const Order = () => {
 														</button>
 													</td>
 													<td>
-														<Link to={`/admin/order/${i.orderID}`}>
-															..
-														</Link>
+														<Button
+															text={"..."}
+															onClick={(e) =>
+																openDetail(e, i.orderID)
+															}
+														/>
 													</td>
 												</tr>
 											))}
@@ -410,9 +426,12 @@ const Order = () => {
 													<td>{i.dateOfReceiptOfGoods}</td>
 													<td>{i.status}</td>
 													<td>
-														<Link to={`/admin/order/${i.orderID}`}>
-															..
-														</Link>
+														<Button
+															text={"..."}
+															onClick={(e) =>
+																openDetail(e, i.orderID)
+															}
+														/>
 													</td>
 												</tr>
 											))}
@@ -451,9 +470,12 @@ const Order = () => {
 													<td>{i.orderDate}</td>
 													<td>{i.status}</td>
 													<td>
-														<Link to={`/admin/order/${i.orderID}`}>
-															..
-														</Link>
+														<Button
+															text={"..."}
+															onClick={(e) =>
+																openDetail(e, i.orderID)
+															}
+														/>
 													</td>
 												</tr>
 											))}
@@ -470,6 +492,22 @@ const Order = () => {
 						</Tab.Panel>
 					</Tab.Panels>
 				</Tab.Group>
+
+				<>
+					{detailOpen ? (
+						<div
+							className="fixed inset-0 flex items-center justify-center"
+							style={{ backgroundColor: "rgba(0, 0, 0, 0.7)" }}
+						>
+							<OrderDetail
+								orderId={orderDetailId}
+								controlOpen={[detailOpen, setDetailOpen]}
+							/>
+						</div>
+					) : (
+						""
+					)}
+				</>
 			</div>
 		</div>
 	);

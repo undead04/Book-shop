@@ -65,6 +65,11 @@ const ProductDetail = () => {
 		});
 	};
 
+	const childrenNotify = (msg) => {
+		toast(msg);
+		fetchComment();
+	};
+
 	const checkCanComment = () => {
 		if (userId && token) {
 			axiosClient
@@ -108,15 +113,39 @@ const ProductDetail = () => {
 				setLoading(false);
 			});
 
-			axiosClient.get(`/comment/bookID/${id}`).then((res) => {
-				setComments(res.data);
-			});
+			fetchComment();
 		}
+	};
+	const fetchComment = () => {
+		axiosClient.get(`/comment/bookID/${id}`).then((res) => {
+			console.log(res.data);
+			setComments(res.data);
+		});
 	};
 
 	const handleBuyNow = (e) => {
 		e.preventDefault();
 		setOpenBuyForm(true);
+	};
+
+	const handleAddCart = () => {
+		const storedCart = localStorage.getItem("cart");
+		let cart = storedCart ? JSON.parse(storedCart) : [];
+
+		const existingProduct = cart.find((i) => i.id === id);
+		if (!!existingProduct) {
+			if (existingProduct.quantity < book.quantity) {
+				existingProduct.quantity += 1;
+				toast("Thêm vào giỏ hàng thành công");
+			} else {
+				toast("Quá số lượng sản phẩm");
+			}
+		} else {
+			cart.push({ id: id, quantity: 1 });
+			toast("Thêm vào giỏ hàng thành công");
+		}
+
+		localStorage.setItem("cart", JSON.stringify(cart));
 	};
 
 	return (
@@ -163,7 +192,10 @@ const ProductDetail = () => {
 											{currencyFormatter.format(book.oldPrice)}
 										</span>
 										<div className="flex items-center gap-4 ml-auto">
-											<button className="flex text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-red-600 rounded">
+											<button
+												onClick={handleAddCart}
+												className="flex text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-red-600 rounded"
+											>
 												Add to cart
 											</button>
 											<button
@@ -252,8 +284,8 @@ const ProductDetail = () => {
 								</div>
 								<div>
 									{comments.map((c) => (
-										<div className="w-3/5 mx-auto">
-											<CommentMessage comment={c} />
+										<div key={c.userID} className="w-3/5 mx-auto">
+											<CommentMessage comment={c} bookId={id} />
 										</div>
 									))}
 								</div>
@@ -267,6 +299,8 @@ const ProductDetail = () => {
 										bookId={id}
 										handleOpen={setOpenRating}
 										isOpen={openRating}
+										notify={childrenNotify}
+										setCanComment={setCanComment}
 									/>
 								</div>
 							)}

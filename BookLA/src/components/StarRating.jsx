@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-const StarRating = ({ setRatingParent }) => {
+const StarRating = ({ setRatingParent, initalRate = 1 }) => {
 	const [rating, setRating] = useState(1);
-
+	useEffect(() => {
+		setRating(initalRate);
+	}, []);
 	const handleStarClick = (selectedRating) => {
 		setRating(selectedRating);
 		setRatingParent(selectedRating);
@@ -58,7 +60,9 @@ const StarRating = ({ setRatingParent }) => {
 
 	return (
 		<div className="star-rating">
-			<div className="flex">{renderStars()}</div>
+			<div className="flex justify-center w-full">
+				{renderStars()}
+			</div>
 			<div className="text-center">{getRatingText()}</div>
 		</div>
 	);

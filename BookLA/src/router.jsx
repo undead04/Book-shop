@@ -5,7 +5,6 @@ import ProductViewLayout from "./Layout/ProductViewLayout";
 import Products from "./Views/Products";
 import ProductDetail from "./components/Product/ProductDetail";
 import Order from "./Views/Order";
-import OrderDetail from "./Views/OrderDetail";
 import User from "./Views/User";
 import Cart from "./Views/Cart";
 import GuestLayout from "./Layout/GuestLayout";
@@ -30,6 +29,7 @@ import CommentModal from "./components/CommentModal";
 import RatingView from "./components/RatingView";
 import BuyingForm from "./components/BuyingForm";
 import StarRating from "./components/StarRating";
+import Income from "./Views/Admin/Income";
 const router = createBrowserRouter([
 	{
 		path: "/",
@@ -82,10 +82,6 @@ const router = createBrowserRouter([
 			{
 				path: "/order",
 				element: <Order />,
-			},
-			{
-				path: "/order/:id",
-				element: <OrderDetail />,
 			},
 			{
 				path: "/cart",
@@ -142,6 +138,10 @@ const router = createBrowserRouter([
 					{
 						path: "/admin/users",
 						element: <AdminUser />,
+					},
+					{
+						path: "/admin/income",
+						element: <Income />,
 					},
 				],
 			},

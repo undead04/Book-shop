@@ -5,7 +5,7 @@ import StarRating from "./StarRating";
 import axiosClient from "../axios-client";
 import { useStateContext } from "../Contexts/ContextProvider";
 
-const CommentModal = ({ bookId, isOpen, handleOpen }) => {
+const CommentModal = ({ bookId, isOpen, handleOpen, notify }) => {
 	const [rating, setRating] = useState(1);
 	const { userId } = useStateContext();
 	const commentRef = useRef();
@@ -20,7 +20,12 @@ const CommentModal = ({ bookId, isOpen, handleOpen }) => {
 					star: rating,
 				})
 				.then((res) => {
-					console.log(res);
+					setCanComment(false);
+					handleOpen(false);
+					notify("Comment thành công!");
+				})
+				.catch((err) => {
+					notify("Đã xảy ra lỗi. Vui lòng thử lại");
 				});
 		}
 	};

@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import axiosClient from "../../axios-client";
 import { currencyFormatter } from "../../util/currencyFormatter";
 import Pagination from "../../components/Pagination";
@@ -6,6 +8,7 @@ import Table from "../../components/Admin/Table";
 import Button from "../../components/Button";
 import MDialog from "../../components/Dialog";
 import { LogarithmicScale } from "chart.js";
+import { useNavigate } from "react-router-dom";
 
 const BookView = () => {
 	const [books, setBooks] = useState([]);
@@ -40,6 +43,7 @@ const BookView = () => {
 	const [isChecked, setIsChecked] = useState(false);
 	const [isSelectedAll, setIsSelectedAll] = useState(false);
 	const [dialogOpen, setDialogOpen] = useState(false);
+	const navigate = useNavigate();
 	useEffect(() => {
 		fetchData();
 	}, [currentPage]);
@@ -99,6 +103,20 @@ const BookView = () => {
 		} catch (error) {}
 	};
 
+	const handleEditBook = (e) => {
+		e.preventDefault();
+		const selectedBook = books.filter((b) => b.checked);
+		if (selectedBook.length == 1) {
+			navigate(`/admin/books/edit/${selectedBook[0].id}`);
+		} else {
+			notify("Vui lòng chọn 1 sản phẩm để chỉnh sửa!");
+		}
+	};
+
+	const notify = (msg) => {
+		toast(msg);
+	};
+
 	const handleOpenDialog = () => {
 		const deleteItem = books.filter((c) => c.checked === true);
 		if (deleteItem.length > 0) {
@@ -133,6 +151,7 @@ const BookView = () => {
 		console.log(e.target.value);
 		setCurrentPage(e.target.value);
 	};
+
 	return (
 		<div className="grid lg:grid-cols-4 grid-cols-1 gap-4">
 			<div className="col-span-3 bg-white shadow-lg rounded-lg my-4 p-4">
@@ -154,6 +173,7 @@ const BookView = () => {
 							</select>
 						</div>
 					</div>
+					<ToastContainer />
 					<Table
 						dataList={books}
 						fieldList={field}
@@ -178,7 +198,8 @@ const BookView = () => {
 						classNames={
 							"bg-blue-500 px-3 py-2 rounded-md shadow-md outline-white text-white"
 						}
-						text={"Add and Edit"}
+						text={"Edit"}
+						onClick={handleEditBook}
 					/>
 				</div>
 			</div>

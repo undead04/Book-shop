@@ -44,7 +44,7 @@ const RatingView = ({ bookId = -1 }) => {
 	};
 
 	const getAverageStar = () => {
-		return Math.floor(getTotalStar() / ratingData.length, 2);
+		return Math.floor(getTotalStar() / ratingData.length, 2) || 0;
 	};
 	return (
 		<div className="px-3 py-6 bg-gray-700">

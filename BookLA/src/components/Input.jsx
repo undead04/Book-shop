@@ -13,7 +13,7 @@ const Input = forwardRef(
 				{type === "textarea" ? (
 					<>
 						<textarea
-							className="block mt-2 w-full placeholder-gray-400/70 bg-white px-3 py-2 border"
+							className="block mt-2 w-full placeholder-gray-400/70 bg-white px-3 py-2 border text"
 							ref={ref}
 							{...props}
 							cols="30"

@@ -21,6 +21,7 @@ const OrderDetail = ({ orderId, controlOpen }) => {
 	const fetchData = () => {
 		try {
 			axiosClient.get(`/order/${orderId}`).then((res) => {
+				console.log(res.data);
 				setOrder(res.data);
 			});
 		} catch (error) {
@@ -30,10 +31,8 @@ const OrderDetail = ({ orderId, controlOpen }) => {
 
 	const getTotalPrice = () => {
 		const total = order.items.reduce((pre, cur) => {
-			console.log(cur.totalPrice);
 			return (cur.totalPrice += pre);
 		}, 0);
-		console.log(total);
 		return total;
 	};
 

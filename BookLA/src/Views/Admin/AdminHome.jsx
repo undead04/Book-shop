@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
 	Chart as ChartJS,
 	LineElement,
@@ -17,6 +17,7 @@ import {
 import DynamicHeroIcon from "./../../components/DynamicHeroIcon";
 
 import { currencyFormatter } from "../../util/currencyFormatter";
+import axiosClient from "../../axios-client";
 
 ChartJS.register(
 	LineElement,
@@ -27,6 +28,7 @@ ChartJS.register(
 	Tooltip,
 	Legend,
 );
+
 const data = {
 	labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
 	datasets: [
@@ -79,13 +81,33 @@ const adminTabs = [
 ];
 
 const AdminHome = () => {
-	useEffect(() => {}, []);
+	const [incomeData, setIncomeData] = useState([]);
+	const [orderDate, setOrderDate] = useState([]);
+	const fetchData = () => {
+		axiosClient.get("/order?status=3").then((res) => {
+			let totalPrice = 0;
+			setIncomeData(
+				res.data.order.map((o, i) => {
+					if (i >= 0) {
+						totalPrice += o.price;
+					} else {
+						totalPrice = o.price;
+					}
+					return totalPrice;
+				}),
+			);
+			setOrderDate(res.data.order.map((o) => o.orderDate));
+		});
+	};
+
+	useEffect(() => {
+		fetchData();
+	}, []);
 	return (
 		<div>
 			<div className="grid lg:grid-cols-4 grid-cols-1 gap-4">
 				<div className="col-span-3 bg-white shadow-lg rounded-lg my-4 p-4">
-					<div className="grid grid-cols-2 gap-2">
-						<div className="col-span-1">
+					{/* <div className="col-span-1">
 							<div className="shadow-md p-4">
 								<div className="text-3xl">Notification</div>
 								<div className="relative px-4">
@@ -205,15 +227,26 @@ const AdminHome = () => {
 									</div>
 								</div>
 							</div>
-						</div>
-						<div className="col-span-1">
-							<div className="shadow-md p-4 h-full">
-								<div className="flex flex-col h-full">
-									<div className="text-3xl">Income</div>
-									<div className="p-4 flex-1">
-										<Line data={data} options={options} />
-									</div>
-								</div>
+						</div> */}
+					<div className="shadow-md p-4 h-full">
+						<div className="flex flex-col h-full">
+							<div className="text-3xl">Income</div>
+							<div className="p-4 flex-1">
+								<Line
+									data={{
+										labels: orderDate || data.labels,
+										datasets: [
+											{
+												label: "VND",
+												data: incomeData || [12, 19, 3, 5, 2, 3],
+												borderWidth: 1,
+												backgroundColor: ["red", "blue", "green"],
+												borderColor: "black",
+											},
+										],
+									}}
+									options={options}
+								/>
 							</div>
 						</div>
 					</div>

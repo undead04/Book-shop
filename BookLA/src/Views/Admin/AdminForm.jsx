@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Input from "../../components/Input";
 import axiosClient from "../../axios-client";
 import { Menu } from "@headlessui/react";
@@ -96,24 +98,29 @@ const AdminForm = () => {
 
 		frmData.append("description", book.description);
 		frmData.append("seriesID", "");
-		console.log(dateTime);
 		frmData.append("create", dateTime);
 		if (id) {
 			axiosClient.put(`/book/${id}`, frmData).then((res) => {
-				console.log(res);
+				toast("Sửa sản phẩm thành công!");
 			});
 		} else {
 			axiosClient.post("/book", frmData).then((res) => {
-				console.log(res);
+				toast("Thêm sản phẩm thành công!");
 			});
 		}
+		setTimeout(() => {
+			navigator("/admin/books/all");
+		}, 5000);
 	};
 
 	return (
 		<div>
+			<ToastContainer />
 			<div className="grid grid-cols-3 p-4 gap-4 h-auto">
 				<div className="col-span-2 panel">
-					<h2 className="text-3xl font-medium">Add a new book</h2>
+					<h2 className="text-3xl font-medium">
+						{id ? "Edit book" : "Add book"}
+					</h2>
 					<form>
 						<Input
 							title={"Name"}
@@ -267,7 +274,7 @@ const AdminForm = () => {
 									classNames={
 										"button bg-blue-500 text-white w-fit block ml-auto"
 									}
-									text={"Thêm sản phẩm"}
+									text={"Lưu"}
 									onClick={handleAddBook}
 								/>
 							</div>
@@ -287,7 +294,8 @@ const AdminForm = () => {
 											src={`${
 												import.meta.env.VITE_API_BASE_URL
 											}/api/Image/${decodeURIComponent(book.image)}`}
-											alt="BOok"
+											alt="Main image"
+											className="object-cover w-2/3 mx-auto"
 										/>
 									</div>
 									<div className="text-xl font-medium my-2">
