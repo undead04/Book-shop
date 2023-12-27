@@ -1,4 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import Table from "../../components/Admin/Table";
 import axiosClient from "../../axios-client";
 import Button from "../../components/Button";
@@ -91,7 +94,7 @@ const CategoryForm = () => {
 			for (const item of deleteItem) {
 				await axiosClient.delete(`/category/${item.id}`);
 			}
-			console.log("Delete successfully");
+			toast("Delete successfully");
 		} catch (error) {
 			console.error("Lỗi khi xóa thể loại: ", error);
 		}
@@ -133,7 +136,10 @@ const CategoryForm = () => {
 				.then((res) => {
 					if (res.errorCode === 400) {
 						setError(res.message.Name);
+					} else {
+						toast("Action successfully");
 					}
+
 					fetchData();
 				});
 		} else {
@@ -148,9 +154,10 @@ const CategoryForm = () => {
 					.then((res) => {
 						if (res.errorCode === 400) {
 							setError(res.message.Name);
+						} else {
+							toast("Action successfully");
 						}
 						fetchData();
-						console.log(res);
 					});
 			}
 		}
@@ -259,6 +266,8 @@ const CategoryForm = () => {
 				onDeny={onDeny}
 				onControl={{ dialogOpen, setDialogOpen }}
 			/>
+
+			<ToastContainer />
 		</div>
 	);
 };
