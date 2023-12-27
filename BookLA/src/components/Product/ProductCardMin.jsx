@@ -61,9 +61,13 @@ const ProductCardMin = ({ items }) => {
 					<Rating value={items.totalStar} />
 				</div>
 				<div className="flex items-center justify-end gap-2">
-					<span className="text-sm text-gray-600 font-bold line-through">
-						{currencyFormatter.format(items.oldPrice)}
-					</span>
+					{items.oldPrice == items.newPrice ? (
+						""
+					) : (
+						<span className="text-sm text-gray-600 font-bold line-through">
+							{currencyFormatter.format(items.oldPrice)}
+						</span>
+					)}
 					<span className="text-2xl font-bold">
 						{currencyFormatter.format(items.newPrice)}
 					</span>
@@ -75,17 +79,6 @@ const ProductCardMin = ({ items }) => {
 				className="group-hover:flex items-start justify-center absolute inset-0 hidden bg-opacity-75"
 			>
 				<div className="flex flex-1 justify-around rounded-md py-4 items-center bg-white dark:bg-black">
-					{/* <Button
-							text={"Add to cart"}
-							primary
-							classNames={
-								"flex-1 block mb-2 border border-white p-4 bg-black text-white hover:bg-white hover:text-black transition-all duration-3000"
-							}
-							onClick={(e) => {
-								e.preventDefault();
-								handleAddToCart(items.id, items.quantity);
-							}}
-						/> */}
 					<button
 						onClick={(e) => {
 							e.preventDefault();
@@ -97,14 +90,6 @@ const ProductCardMin = ({ items }) => {
 					<Link to={`/book/${items.id}`}>
 						<EyeIcon className="w-8 h-8 dark:text-white text-black hover:text-blue-500 hover:scale-150 duration-200" />
 					</Link>
-					{/* <Button
-							text={"View more"}
-							primary
-							classNames={
-								"flex-1 border border-white p-4 bg-white text-black hover:bg-black hover:text-white transition-all duration-3000"
-							}
-							to={`/book/${items.id}`}
-						/> */}
 				</div>
 			</div>
 		</div>

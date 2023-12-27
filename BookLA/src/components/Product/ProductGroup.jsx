@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Heading from "../Heading";
 import ProductCardMin from "./ProductCardMin";
-import FancyButton from "../FancyButton";
 import { useNavigate, useParams } from "react-router-dom";
 import axiosClient from "../../axios-client";
 
@@ -51,11 +50,7 @@ const ProductGroup = ({ headingName, books }) => {
 		<>
 			<div>
 				<Heading title={headingName} />
-				<div className="flex justify-end">
-					<div className="">
-						<FancyButton to={`/books/type/`} title={"View more"} />
-					</div>
-				</div>
+
 				<div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 py-4 gap-4">
 					{books.map((p, i) => (
 						<ProductCardMin items={p} key={p.id} />

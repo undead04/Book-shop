@@ -7,6 +7,7 @@ import axiosClient from "../axios-client";
 import StarRating from "./StarRating";
 import Rating from "./Rating";
 import Input from "./Input";
+import { useStateContext } from "../Contexts/ContextProvider";
 
 const CommentMessage = ({ comment, bookId }) => {
 	const [commentEdit, setCommentEdit] = useState(false);
@@ -15,6 +16,7 @@ const CommentMessage = ({ comment, bookId }) => {
 	const handleEditComment = () => {
 		setCommentEdit(true);
 	};
+	const { userId } = useStateContext();
 
 	const handlePutComment = () => {
 		axiosClient
@@ -108,11 +110,13 @@ const CommentMessage = ({ comment, bookId }) => {
 							</>
 						)}
 					</div>
-					<Button
-						classNames={"text w-fit block ml-auto"}
-						text={"Chỉnh sửa"}
-						onClick={handleEditComment}
-					/>
+					{comment.userID == userId && (
+						<Button
+							classNames={"text w-fit block ml-auto"}
+							text={"Chỉnh sửa"}
+							onClick={handleEditComment}
+						/>
+					)}
 				</div>
 				<ToastContainer />
 			</div>

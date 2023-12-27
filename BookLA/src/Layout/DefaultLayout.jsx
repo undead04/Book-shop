@@ -4,6 +4,7 @@ import Navbar from "./Component/Navbar.jsx";
 import { Outlet } from "react-router-dom";
 import { useStateContext } from "../Contexts/ContextProvider.jsx";
 import axiosClient from "../axios-client.js";
+import Footer from "./Component/Footer.jsx";
 
 const DefaultLayout = () => {
 	const { userId, setUser } = useStateContext();
@@ -28,7 +29,9 @@ const DefaultLayout = () => {
 				<div className="lg:col-span-4 col-span-2">
 					<Outlet />
 				</div>
+				<div></div>
 			</div>
+			<Footer />
 		</div>
 	);
 };

@@ -132,7 +132,7 @@ const ProductDetail = () => {
 		const storedCart = localStorage.getItem("cart");
 		let cart = storedCart ? JSON.parse(storedCart) : [];
 
-		const existingProduct = cart.find((i) => i.id === id);
+		const existingProduct = cart.find((i) => i.id == +id);
 		if (!!existingProduct) {
 			if (existingProduct.quantity < book.quantity) {
 				existingProduct.quantity += 1;
@@ -141,7 +141,7 @@ const ProductDetail = () => {
 				toast("Quá số lượng sản phẩm");
 			}
 		} else {
-			cart.push({ id: id, quantity: 1 });
+			cart.push({ id: +id, quantity: 1 });
 			toast("Thêm vào giỏ hàng thành công");
 		}
 

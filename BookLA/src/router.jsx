@@ -17,19 +17,10 @@ import AdminForm from "./Views/Admin/AdminForm";
 import AdminMain from "./Layout/AdminMain";
 import AdminHome from "./Views/Admin/AdminHome";
 import BookView from "./Views/Admin/BookView";
-import ProductLoader from "./components/Product/ProductLoader";
-import ProductDetailLoader from "./components/Product/ProductDetailLoader";
 import CategoryForm from "./Views/Admin/CategoryForm";
-import Table from "./components/Admin/Table";
-import SideForm from "./components/Admin/SideForm";
 import { default as AdminOrder } from "./Views/Admin/Order";
 import { default as AdminUser } from "./Views/Admin/User";
-import DatePicker from "./components/DatePicker";
-import CommentModal from "./components/CommentModal";
-import RatingView from "./components/RatingView";
-import BuyingForm from "./components/BuyingForm";
 import StarRating from "./components/StarRating";
-import Income from "./Views/Admin/Income";
 const router = createBrowserRouter([
 	{
 		path: "/",
@@ -138,10 +129,6 @@ const router = createBrowserRouter([
 					{
 						path: "/admin/users",
 						element: <AdminUser />,
-					},
-					{
-						path: "/admin/income",
-						element: <Income />,
 					},
 				],
 			},

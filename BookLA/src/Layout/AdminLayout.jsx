@@ -10,7 +10,7 @@ const AdminLayout = () => {
 	const navigator = useNavigate();
 	useEffect(() => {
 		axiosClient.get(`/user/${userId}`).then((res) => {
-			if (res.data.role == "Admin") {
+			if (res.data.role != "Admin") {
 				navigator("/");
 			}
 		});

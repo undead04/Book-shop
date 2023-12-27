@@ -78,7 +78,6 @@ const Login = () => {
 				<Input
 					title={"Password"}
 					ref={passwordRef}
-					error={"Invalid"}
 					type={"password"}
 				/>
 

@@ -83,6 +83,30 @@ const adminTabs = [
 const AdminHome = () => {
 	const [incomeData, setIncomeData] = useState([]);
 	const [orderDate, setOrderDate] = useState([]);
+	const [adminTabs, setAdminTabs] = useState([
+		{
+			title: "Total users",
+			icon: "UserGroupIcon",
+		},
+		{
+			title: "Total books",
+			icon: "BookOpenIcon",
+		},
+		{
+			title: "Total Order",
+			icon: "CreditCardIcon",
+			currency: true,
+		},
+		{
+			title: "Today's money",
+			icon: "BanknotesIcon",
+			currency: true,
+		},
+	]);
+	const [userCount, setUserCount] = useState(0);
+	const [bookCount, setBookCount] = useState(0);
+	const [orderCount, setOrderCount] = useState(0);
+	const [income, setIncome] = useState(0);
 	const fetchData = () => {
 		axiosClient.get("/order?status=3").then((res) => {
 			let totalPrice = 0;
@@ -100,13 +124,64 @@ const AdminHome = () => {
 		});
 	};
 
+	const fetchTotalUserCount = () => {
+		axiosClient.get("/user/all").then((res) => {
+			const total =
+				Math.ceil((res.data.totalPage * res.data.user.length) / 10) *
+				10;
+			setUserCount(total);
+		});
+	};
+
+	const fetchTotalBookCount = () => {
+		axiosClient.get("/book").then((res) => {
+			setBookCount(res.data.length);
+		});
+	};
+
+	const fetchTotalIncome = () => {
+		let total = 0;
+		axiosClient.get("/order").then((res) => {
+			total = res.data.order.reduce((pre, cur) => {
+				return (pre += cur.price);
+			}, 0);
+			setIncome(total);
+			setOrderCount(res.data.order.length);
+		});
+	};
+
 	useEffect(() => {
 		fetchData();
+		fetchTotalUserCount();
+		fetchTotalBookCount();
+		fetchTotalIncome();
 	}, []);
+
+	const renderAmount = (i) => {
+		let renderAmount = 0;
+		switch (i) {
+			case 0:
+				renderAmount = userCount;
+				break;
+			case 1:
+				renderAmount = bookCount;
+				break;
+			case 2:
+				renderAmount = orderCount;
+				break;
+			case 3:
+				renderAmount = currencyFormatter.format(income);
+				break;
+
+			default:
+				break;
+		}
+		return renderAmount;
+	};
 	return (
 		<div>
-			<div className="grid lg:grid-cols-4 grid-cols-1 gap-4">
-				<div className="col-span-3 bg-white shadow-lg rounded-lg my-4 p-4">
+			<div className="grid lg:grid-cols-4 grid-cols-1 lg:gap-4 gap-0 h-screen">
+				<div className="col-span-3 bg-white shadow-lg rounded-lg my-4 p-4 ">
 					{/* <div className="col-span-1">
 							<div className="shadow-md p-4">
 								<div className="text-3xl">Notification</div>
@@ -251,8 +326,8 @@ const AdminHome = () => {
 						</div>
 					</div>
 				</div>
-				<div className="col-span-1 bg-white shadow-lg  rounded-lg my-4 p-4">
-					<div className="grid grid-cols-1 h-full">
+				<div className="col-span-1 bg-white shadow-lg  rounded-lg my-4 p-4 mx-auto md:w-full">
+					<div className="grid grid-cols-1 h-full ">
 						{adminTabs.map((a, i) => (
 							<div key={i} className="p-4 shadow-md round">
 								<div className="flex items-center h-full">
@@ -261,9 +336,7 @@ const AdminHome = () => {
 											{a.title}
 										</h5>
 										<p className="font-bold text-3xl">
-											{a.amount && a.currency
-												? currencyFormatter.format(a.amount)
-												: a.amount}
+											{renderAmount(i)}
 										</p>
 									</div>
 									<div className="flex-1">
