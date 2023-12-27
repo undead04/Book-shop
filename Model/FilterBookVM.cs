@@ -22,6 +22,7 @@
         public double TotalStar { get;set; }
         public double OldPrice { get; set; }
         public double NewPrice { get; set; }
+        public int Quantity { get; set; }
         public IList<string>? NameCategory { get; set; }
         public string Image { get; set; } = string.Empty;
     }

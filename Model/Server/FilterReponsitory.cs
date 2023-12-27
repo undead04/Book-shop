@@ -83,7 +83,7 @@ namespace BookShop.Model.Reponsitory
                 ID = x.ID,
               
                 Name = x.Name,
-
+                Quantity=x.Quantity,
                 NameCategory = x.bookCategories!.Select(x => x.Category!.Name).ToList(),
                 OldPrice = x.OldPrice,
                 NewPrice = x.NewPrice,
