@@ -105,9 +105,13 @@ const AdminForm = () => {
 		if (id) {
 			axiosClient.put(`/book/${id}`, frmData).then((res) => {
 				if (res.errorCode == 400) {
-					toast(
-						"Đã xảy ra lỗi, đảm bảo các trường không trống và thử lại",
-					);
+					if (book.name != "") {
+						toast("Đã xảy ra lỗi, sách này đã tồn tại");
+					} else {
+						toast(
+							"Đã xảy ra lỗi, đảm bảo các trường không trống và thử lại",
+						);
+					}
 				} else {
 					toast("Sửa sản phẩm thành công!");
 					setTimeout(() => {
