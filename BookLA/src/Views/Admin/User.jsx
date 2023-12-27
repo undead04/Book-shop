@@ -1,12 +1,18 @@
 import React, { useEffect, useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import axiosClient from "../../axios-client";
 import { Link } from "react-router-dom";
 import UserForm from "../../components/Admin/UserForm";
+import Button from "../../components/Button";
+import { default as MDialog } from "../../components/Dialog";
 
 const User = () => {
 	const [users, setUsers] = useState([]);
 	const [openUser, setOpenUser] = useState(false);
 	const [selectedUser, setSelectedUser] = useState({});
+	const [dialogOpen, setDialogOpen] = useState(false);
 	const fetchData = () => {
 		axiosClient.get("/user/all").then((res) => {
 			setUsers(res.data.user);
@@ -24,9 +30,26 @@ const User = () => {
 	useEffect(() => {
 		fetchData();
 	}, []);
+
+	const handleNotifyDeleteUser = (user) => {
+		setSelectedUser(user);
+		setDialogOpen(true);
+	};
+
+	const handleDeleteUser = (id) => {
+		axiosClient.delete(`/user/${id}`).then((res) => {
+			console.log(res);
+			if (res.errorCode == 0) {
+			} else {
+				toast("Delete failed!");
+			}
+			fetchData();
+		});
+	};
 	return (
 		<div className="py-4">
 			<div className="panel">
+				<ToastContainer />
 				<table className="w-full">
 					<thead>
 						<tr className="border-b-2">
@@ -34,6 +57,7 @@ const User = () => {
 							<td>ID</td>
 							<td>Name</td>
 							<td>Phone</td>
+							<td></td>
 							<td>...</td>
 						</tr>
 					</thead>
@@ -63,6 +87,13 @@ const User = () => {
 									<td>{i.userName}</td>
 									<td>{i.phone ? i.phone : "0XXXXXXXXX"}</td>
 									<td>
+										<Button
+											classNames={"text-red-500 font-bold"}
+											text={"Delete"}
+											onClick={() => handleNotifyDeleteUser(i)}
+										/>
+									</td>
+									<td>
 										<button onClick={() => handleOpenUserCard(i)}>
 											..
 										</button>
@@ -87,6 +118,14 @@ const User = () => {
 						</>
 					)}
 				</div>
+				<MDialog
+					title={`Delete user ${selectedUser.userName}`}
+					description="Are you sure you want to delete this user?"
+					message={`User ${selectedUser.userName} will be deleted`}
+					onAccept={() => handleDeleteUser(selectedUser.id)}
+					onDeny={() => setDialogOpen(false)}
+					onControl={{ dialogOpen, setDialogOpen }}
+				/>
 			</div>
 		</div>
 	);

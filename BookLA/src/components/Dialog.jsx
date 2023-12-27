@@ -25,18 +25,21 @@ const MDialog = ({
 			open={dialogOpen}
 			onClose={() => setDialogOpen(false)}
 		>
-			<div className="fixed inset-0 flex w-screen items-center justify-center">
+			<div
+				className="fixed inset-0 flex w-screen items-center justify-center"
+				style={{ backgroundColor: "rgba(0,0,0,0.7)" }}
+			>
 				<Dialog.Panel className="w-full max-w-sm rounded-2xl shadow-2xl bg-white text-black dark:bg-gray-950 dark:text-white border dark:border-white p-4">
 					<Dialog.Title className={"mb-4 text-3xl font-extrabold "}>
 						{title}
 					</Dialog.Title>
 					<Dialog.Description
-						className={"mb-8 text-black dark:text-slate-50"}
+						className={"mb-4 text-black dark:text-slate-50"}
 					>
 						{description}
 					</Dialog.Description>
 
-					<p>{message}</p>
+					<p className="mb-2">{message}</p>
 
 					<button
 						className="p-3 mb-2 bg-black rounded-full text-white w-full font-semibold border"
