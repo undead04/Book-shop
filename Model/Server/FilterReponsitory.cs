@@ -15,7 +15,7 @@ namespace BookShop.Model.Reponsitory
         }
        
 
-        public  List<BookVM> GetFilter(string search, string? categoryId, int? from, int? to, string? sortby)
+        public async Task<List<FilterBook>> GetFilter(string search, string? categoryId, int? from, int? to, string? sortby)
         {
             var book = _context.books.AsQueryable();
             if (search != null)
@@ -78,19 +78,18 @@ namespace BookShop.Model.Reponsitory
                 }
             }
             
-            return book.Select(x => new BookVM
+            return book.Select(x => new FilterBook
             {
                 ID = x.ID,
-                Quantity = x.Quantity,
+              
                 Name = x.Name,
-                Publisher = x.Publisher,
-                Supplier = x.Supplier,
+
+                NameCategory = x.bookCategories!.Select(x => x.Category!.Name).ToList(),
                 OldPrice = x.OldPrice,
                 NewPrice = x.NewPrice,
-                Author = x.Author,
+               
                 Image = x.Image,
-                NameCategory=x.bookCategories!.Select(x=>x.Category.Name).ToList(),
-                SecondaryImage = x.images!.Select(x => x.Image).ToList(),
+                
                 TotalStar = x.comments.Any() ? Math.Round((double)x.comments.Select(x => x.Star).Sum() / x.comments.Select(x => x.Star).Count(), 2) : 0
 
             }).ToList();

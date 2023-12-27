@@ -36,7 +36,7 @@ namespace BookShop.Model.Reponsitory
                 var extension = Path.GetExtension(bookModel.Image.FileName);
                 var nameImage=Path.GetFileNameWithoutExtension(bookModel.Image.FileName);
                 string timeStamp = DateTime.Now.ToString("dd-MM-yyyy-HH-mm-ss");
-                if (imageExtensions.Contains(extension))
+                if (imageExtensions.Contains(extension.ToLower()))
                 {
                     string newNameImage = $"{book.ID}_{nameImage}_{timeStamp}{extension}";
                     string PathImage = Path.Combine(Directory.GetCurrentDirectory(), "Resources", newNameImage);
@@ -55,7 +55,7 @@ namespace BookShop.Model.Reponsitory
                     var extension = Path.GetExtension(file.FileName);
                     string timeStamp = DateTime.Now.ToString("dd-MM-yyyy-HH-mm-ss");
                     var nameImage = Path.GetFileNameWithoutExtension(file.FileName);
-                    if (imageExtensions.Contains(extension))
+                    if (imageExtensions.Contains(extension.ToLower()))
                     {
                         string newNameImage = $"{book.ID}_{nameImage}_{timeStamp}{extension}";
                         string PathImage = Path.Combine(Directory.GetCurrentDirectory(), "Resources", newNameImage);
@@ -196,7 +196,7 @@ namespace BookShop.Model.Reponsitory
             {
                 var extension = Path.GetExtension(bookModel.Image.FileName);
                 string timeStamp = DateTime.Now.ToString("dd-MM-yyyy-HH-mm-ss");
-                if (imageExtensions.Contains(extension))
+                if (imageExtensions.Contains(extension.ToLower()))
                 {
                     string PathImageOld = Path.Combine(Directory.GetCurrentDirectory(), "Resources", book.Image);
                     if (File.Exists(PathImageOld))
@@ -230,7 +230,7 @@ namespace BookShop.Model.Reponsitory
 
                     var extension = Path.GetExtension(file.FileName);
                     string timeStamp = DateTime.Now.ToString("dd-MM-yyyy-HH-mm-ss");
-                    if (imageExtensions.Contains(extension))
+                    if (imageExtensions.Contains(extension.ToLower()))
                     {
 
                         var imageName = Path.GetFileNameWithoutExtension(file.FileName);

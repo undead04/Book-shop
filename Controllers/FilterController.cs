@@ -17,12 +17,12 @@ namespace BookShop.Controllers
             _reponsitory = reponsitory;
         }
         [HttpGet]
-        public IActionResult FilterBook(string search,
+        public  async Task<IActionResult> FilterBook(string search,
       string? categoryId, int? from, int? to, string? sortby, int page = 1, int take = 25)
         {
             try
             {
-                var book=_reponsitory.GetFilter(search,categoryId,from,to,sortby);
+                var book=await _reponsitory.GetFilter(search,categoryId,from,to,sortby);
                 double totalPage=Math.Ceiling((double)book.Count/take);
                 book = book.Skip((page - 1) * take).Take(take).ToList();
                 return Ok(BaseResponse<FilterBookVM>.WithData(new FilterBookVM { Book = book, TotalPage = totalPage }));

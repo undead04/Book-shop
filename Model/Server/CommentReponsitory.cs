@@ -65,14 +65,7 @@ namespace BookShop.Model.Server
                 }
             }
            
-            if (bookID.HasValue && !string.IsNullOrEmpty(userID))
-            {
-                var order = await context.ordersDetails.Include(f=>f.Order).FirstOrDefaultAsync(x => x.BookID == bookID && x.Order.UserID == userID);
-                if (order == null || order.Order?.status!=InvoiceStatus.Complete)
-                {
-                    return "Comment That bai";
-                }
-            }
+            
             
             return string.Empty;
         }
