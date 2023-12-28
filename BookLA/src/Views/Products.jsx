@@ -219,7 +219,7 @@ const Products = () => {
 						</div>
 					</div>
 					{typOpen && (
-						<div className=" bg-blue-950 shadow-lg inset-x-0 mt-2">
+						<div className="bg-blue-200 dark:bg-blue-950 shadow-lg inset-x-0 mt-2">
 							<div className="grid grid-cols-3">
 								{category.map((c) => (
 									<div key={c.name}>

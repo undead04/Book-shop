@@ -47,7 +47,7 @@ const RatingView = ({ bookId = -1, star = 1 }) => {
 		return Math.floor(getTotalStar() / ratingData.length, 2) || 0;
 	};
 	return (
-		<div className="px-3 py-6 bg-gray-700">
+		<div className="px-3 py-6 bg-gray-200 dark:bg-gray-700 ">
 			<div className="grid grid-cols-12 items-center gap-8">
 				<div className="col-span-4 text-center items-center">
 					<div className="text-5xl">{star}</div>
